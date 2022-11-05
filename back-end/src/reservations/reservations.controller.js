@@ -9,6 +9,7 @@ async function list(req, res) {
 }
 
 async function create(req, res) {
+  console.log("req.body", req.body)
   const response = await service.create(req.body.data);
   return res.json({ data: response });
 }

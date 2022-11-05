@@ -23,16 +23,22 @@ function New() {
         await fetch(`${API_BASE_URL}/reservations`, {
             method: "POST",
             body: JSON.stringify({
-                first_name: firstName,
-                last_name: lastName,
-                mobile_number: number,
-                date_of_reservation: date,
-                time_of_reservation: time,
-                number_of_people: numberOfPeople
-            })
+                data: {                
+                    first_name: firstName,
+                    last_name: lastName,
+                    mobile_number: number,
+                    reservation_date: date,
+                    reservation_time: time,
+                    people: numberOfPeople
+                }   
+            }),
+            headers: { 'Content-Type': 'application/json' } 
         })
-            .then(response => response.json())
-            .then(data => console.log(data))
+            .then(response => {
+                console.log("fetch response no JSON:", response);
+                return response.json();
+            })
+            .then(data => console.log("fetch response:", data))
         history.push("/reservations")
         //Should send POST request to 
     }

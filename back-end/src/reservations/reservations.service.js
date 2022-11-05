@@ -10,14 +10,17 @@ function list() {
         "people",
         "reservation_id"
         )
-
 }
 
 function create(newReservation) {
+    console.log(newReservation);
     return knex("reservations")
         .insert(newReservation)
         .returning("*")
-        .then(createdRecord => createdRecord[0]);
+        .then(createdRecord => {
+            console.log(createdRecord, 234)
+            return createdRecord[0]
+        });
 }
 
 module.exports = {
