@@ -14,7 +14,32 @@ async function create(req, res) {
   return res.json({ data: response });
 }
 
+function validateProperty(property) {
+  return (req, res, next) => {
+    const { data = {} } = req.body;
+    if (data[property]) return next();
+    return next({ status: 400, message: `Reservation request must include ${property}` });
+  }
+}
+
+async function validateDate(req, res, next) {
+  const { data = {} } = req.body;
+  const { reservation_date } = data;
+  
+}
+
+async function validateTime(req, res, next) {
+  
+}
+
 module.exports = {
   list,
-  create,
+  create: [ //Validation of properties not needed since required on front-end side
+    //validateProperty("first_name"), 
+    // validateProperty("last_name"), 
+    // validateProperty("mobile_number"), 
+    // validateProperty("people"), 
+    // validateDate, 
+    create
+  ],
 };

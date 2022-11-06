@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
+import checkDate from "../utils/checkDate";
 
 function New() {
     const history = useHistory();
@@ -18,8 +19,16 @@ function New() {
     const handleNewReservation = async (e) => {
         e.preventDefault();
         const { firstName, lastName, number, date, time, numberOfPeople } = formData;
-        //const { firstName } = e.target.value;
         console.log("Submit was clicked; firstName:", firstName)
+
+        const checkedDate = checkDate(date);
+        console.log('checkedDate...', checkedDate)
+        if (checkedDate.length > 0) {
+            const alertMsg = checkedDate.length > 0 ? checkedDate.join('; ') : checkedDate[0]
+            window.alert(alertMsg);
+            return null;
+        }
+
         await fetch(`${API_BASE_URL}/reservations`, {
             method: "POST",
             body: JSON.stringify({
@@ -40,7 +49,6 @@ function New() {
             })
             .then(data => console.log("fetch response:", data))
         history.push("/reservations")
-        //Should send POST request to 
     }
 
     return (
@@ -87,7 +95,7 @@ function New() {
                 </label>
                 <br />
                 <label>
-                    Date of Reservation: 
+                    Date of Reservation (MM/DD/YYYY): 
                     <input
                         name="date"
                         type="text"
