@@ -10,7 +10,7 @@ export default function checkDate(dateString) {
     console.log('Currently in checkDate()... checking separator', checkSlash)
     const returnMsg = [];
     //Can remove code checking for separator since date format is now enforced by form
-    let separator = '-';
+    let separator = '-'; //Hard coded for now to preserve rest of commented code
     // if (checkSlash.includes('/')) {
     //     separator = '/'
     // } else if (checkSlash.includes('-')) {
