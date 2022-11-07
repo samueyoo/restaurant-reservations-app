@@ -56,8 +56,7 @@ function Dashboard({ date }) {
     return () => abortController.abort();
   }
 
-  const handleDateChange = (e, id) => { //Need to check if handler can accept event and id parameters
-    e.preventDefault(); //Need this? If state stays after refresh can remove? Need to trigger refresh then?
+  const handleDateChange = (id) => { //Need to check if handler can accept event and id parameters
     switch (id) {
       case "prev":
         setDateToDisplay(previous(dateToDisplay));
@@ -81,9 +80,18 @@ function Dashboard({ date }) {
           <div className="d-md-flex mb-3">
             <h4 className="mb-0">Reservations for {Date()}</h4>
           </div>
-          <button id="prev" type="button" className="btn btn-primary" onClick={handleDateChange(this.id)}>Previous</button>
-          <button id="today" type="button" className="btn btn-primary" onClick={handleDateChange(this.id)}>Today</button>
-          <button id="next" type="button" className="btn btn-primary" onClick={handleDateChange(this.id)}>Next</button>
+          <button id="prev" type="button" className="btn btn-primary" onClick={() => {
+              e.preventDefault();
+              handleDateChange(this.id);
+            }}>Previous</button>
+          <button id="today" type="button" className="btn btn-primary" onClick={() => {
+              e.preventDefault();
+              handleDateChange(this.id);
+            }}>Today</button>
+          <button id="next" type="button" className="btn btn-primary" onClick={() => {
+              e.preventDefault();
+              handleDateChange(this.id);
+            }}>Next</button>
           <ErrorAlert error={reservationsError} />
           <ReservationsDisplay reservations={reservations} />
           {JSON.stringify(reservations)} {/* DEBUG */}
