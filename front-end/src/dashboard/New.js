@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
+import ErrorAlert from "../layout/ErrorAlert";
 import checkDate from "../utils/checkDate";
 
 function New() {
     const history = useHistory();
     const [formData, setFormData] = useState();
+    const [errorStatus, setErrorStatus] = useState(false);
+    const [err, setErr] = useState();
+
     function handleChange({ target }) {
         setFormData({
             ...formData,
@@ -48,11 +52,20 @@ function New() {
                 return response.json();
             })
             .then(data => console.log("fetch response:", data))
-        history.push("/reservations")
+            .then(() => {
+                history.push("/reservations");
+            })
+            .catch(error => {
+                setErrorStatus(true);
+                setErr(error);
+            })
+        //history.push("/reservations")
     }
 
     return (
         <div>
+            { err && <ErrorAlert error={err} />}
+
             <h1>
                 Create a New Reservation
             </h1>
