@@ -23,7 +23,7 @@ function New() {
     const handleNewReservation = async (e) => {
         e.preventDefault();
         const { firstName, lastName, number, date, time, numberOfPeople } = formData;
-        console.log("Submit was clicked; firstName:", firstName)
+        console.log("Submit was clicked; firstName, date:", firstName, date)
 
         const checkedDate = checkDate(date);
         console.log('checkedDate...', checkedDate)
@@ -108,7 +108,7 @@ function New() {
                 </label>
                 <br />
                 <label>
-                    Date of Reservation (MM/DD/YYYY): 
+                    Date of Reservation: 
                     <input
                         name="date"
                         type="date"

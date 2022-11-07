@@ -21,8 +21,7 @@ function Dashboard({ date }) {
 
   useEffect(loadDashboard, [date, dateToDisplay]);
 
-  const API_BASE_URL =
-  process.env.REACT_APP_API_BASE_URL || "http://localhost:5001";
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:5001";
   useEffect(() => {
     async function getRequestReservations() {
       await fetch(`${API_BASE_URL}/reservations`)
