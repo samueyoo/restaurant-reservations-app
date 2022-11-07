@@ -111,9 +111,10 @@ function New() {
                     Date of Reservation (MM/DD/YYYY): 
                     <input
                         name="date"
-                        type="text"
+                        type="date"
                         id="date"
-                        placeholder="Date of Reservation"
+                        placeholder="YYYY-MM-DD" 
+                        pattern="\d{4}-\d{2}-\d{2}"
                         onChange={handleChange}
                         required
                     />
@@ -123,9 +124,10 @@ function New() {
                     Time of Reservation: 
                     <input
                         name="time"
-                        type="text"
+                        type="time"
                         id="time"
-                        placeholder="Time of Reservation"
+                        placeholder="YYYY-MM-DD" 
+                        pattern="\d{4}-\d{2}-\d{2}"
                         onChange={handleChange}
                         required
                     />
