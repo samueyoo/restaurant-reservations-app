@@ -6,7 +6,7 @@ import checkDate from "../utils/checkDate";
 function New() {
     const history = useHistory();
     const [formData, setFormData] = useState();
-    const [errorStatus, setErrorStatus] = useState(false);
+    // const [errorStatus, setErrorStatus] = useState(false); //Can just check if err state is truthy
     const [err, setErr] = useState();
 
     function handleChange({ target }) {
@@ -56,6 +56,7 @@ function New() {
                 history.push("/reservations");
             })
             .catch(error => {
+                console.log("error object caught:", error);
                 setErrorStatus(true);
                 setErr(error);
             })

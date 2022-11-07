@@ -3,6 +3,7 @@
  */
 
 const service = require("./reservations.service");
+const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 
 async function list(req, res) {
   return res.json({ data: await service.list()});
@@ -40,6 +41,6 @@ module.exports = {
     // validateProperty("mobile_number"), 
     // validateProperty("people"), 
     // validateDate, 
-    create
+    asyncErrorBoundary(create)
   ],
 };
