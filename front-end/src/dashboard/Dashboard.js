@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { listReservations } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
-import { Route, Switch, Link, useHistory } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import New from "./New";
 import ReservationsDisplay from "./ReservationsDisplay";
+import { today, previous, next } from "../utils/date-time";
 
 /**
  * Defines the dashboard page.
@@ -15,7 +16,10 @@ function Dashboard({ date }) {
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
 
-  useEffect(loadDashboard, [date]);
+  const todaysDate = today()
+  const [dateToDisplay, setDateToDisplay] = useState(todaysDate);
+
+  useEffect(loadDashboard, [date, dateToDisplay]);
 
   const API_BASE_URL =
   process.env.REACT_APP_API_BASE_URL || "http://localhost:5001";
@@ -35,7 +39,7 @@ function Dashboard({ date }) {
     const abortController = new AbortController();
     setReservationsError(null);
     console.log("about to listReservations...")
-    listReservations({ date }, abortController.signal)
+    listReservations({ dateToDisplay }, abortController.signal)
       .then(res => {
         console.log("listReservations running...:", res); //DEBUG
         console.log(typeof res)
@@ -52,6 +56,23 @@ function Dashboard({ date }) {
     return () => abortController.abort();
   }
 
+  const handleDateChange = (e, id) => { //Need to check if handler can accept event and id parameters
+    e.preventDefault(); //Need this? If state stays after refresh can remove? Need to trigger refresh then?
+    switch (id) {
+      case "prev":
+        setDateToDisplay(previous(dateToDisplay));
+        break;
+      case "today":
+        setDateToDisplay(todaysDate);
+        break;
+      case "next":
+        setDateToDisplay(next(dateToDisplay));
+        break;
+      default:
+        console.log("Everything is terrible and something awful has happened with the date");
+    }
+  }
+
   return (
     <main>
       <Switch>
@@ -60,9 +81,9 @@ function Dashboard({ date }) {
           <div className="d-md-flex mb-3">
             <h4 className="mb-0">Reservations for {Date()}</h4>
           </div>
-          <button type="button" className="btn btn-primary">Previous</button>
-          <button type="button" className="btn btn-primary">Today</button>
-          <button type="button" className="btn btn-primary">Next</button>
+          <button id="prev" type="button" className="btn btn-primary" onClick={handleDateChange(this.id)}>Previous</button>
+          <button id="today" type="button" className="btn btn-primary" onClick={handleDateChange(this.id)}>Today</button>
+          <button id="next" type="button" className="btn btn-primary" onClick={handleDateChange(this.id)}>Next</button>
           <ErrorAlert error={reservationsError} />
           <ReservationsDisplay reservations={reservations} />
           {JSON.stringify(reservations)} {/* DEBUG */}
