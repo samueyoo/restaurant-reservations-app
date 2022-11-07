@@ -25,6 +25,7 @@ function New() {
         const { firstName, lastName, number, date, time, numberOfPeople } = formData;
         console.log("Submit was clicked; firstName, date:", firstName, date)
 
+        //Validate reservation date, returning null if validation fails
         const checkedDate = checkDate(date);
         console.log('checkedDate...', checkedDate)
         if (checkedDate.length > 0) {
@@ -33,6 +34,7 @@ function New() {
             return null;
         }
 
+        //Otherwise, proceed with POST request
         await fetch(`${API_BASE_URL}/reservations`, {
             method: "POST",
             body: JSON.stringify({
@@ -53,12 +55,11 @@ function New() {
             })
             .then(data => console.log("fetch response:", data))
             .then(() => {
-                history.push("/reservations");
+                history.push("/reservations"); //Feeling this doesn't work for some reason and needs to be placed outside of a then statement
             })
             .catch(error => {
                 console.log("error object caught:", error);
-                setErrorStatus(true);
-                setErr(error);
+                setErr(error); //Save error in err state for display
             })
         //history.push("/reservations")
     }
