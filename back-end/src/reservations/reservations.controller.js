@@ -6,9 +6,9 @@ const service = require("./reservations.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 
 async function list(req, res) {
-  if (req.query.date) {
-    console.log("Query data detected:", req.query.date);
-    const date = req.query.date;
+  if (req.query.dateToDisplay) {
+    console.log("Query data detected:", req.query.dateToDisplay);
+    const date = req.query.dateToDisplay;
     return res.json({ data: await service.listByDate(date) });
   }
   console.log("No query data detected, proceeding with full list");

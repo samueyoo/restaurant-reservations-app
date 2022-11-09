@@ -5,7 +5,7 @@ import { Route, Switch, useHistory } from "react-router-dom";
 import New from "./New";
 import ReservationsDisplay from "./ReservationsDisplay";
 import { today, previous, next } from "../utils/date-time";
-const axios = require("axios");
+const axios = require("axios").default; //Added "default" d/t changed module export syntax with post 1.0 version per Axios's issues page
 
 /**
  * Defines the dashboard page.
@@ -16,26 +16,12 @@ const axios = require("axios");
 function Dashboard({ date }) {
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
-
   const todaysDate = today()
   const [dateToDisplay, setDateToDisplay] = useState(todaysDate);
-
   const history = useHistory();
-
   useEffect(loadDashboard, [date, dateToDisplay]);
 
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:5001";
-  useEffect(() => {
-    async function getRequestReservations() {
-      await fetch(`${API_BASE_URL}/reservations`)
-        .then(res => res.json())
-        .then(console.log) //DEBUG
-      //console.log(reservations)
-    }
-    console.log("DASHBOARD PAGE REACHED", Date())
-    getRequestReservations();
-    
-  }, [])
 
   async function loadDashboard() {
     const abortController = new AbortController();
@@ -55,20 +41,6 @@ function Dashboard({ date }) {
         setReservationsError(err)
       });
 
-    //broken
-    // await fetch(`${API_BASE_URL}/reservations/?date=${dateToDisplay}`, {
-    //   method: "GET",
-    //   headers: { 'Content-Type': 'application/json' } 
-    // })
-    //   .then(res => {
-    //     console.log("res", res.json());
-    //     return res.json();
-    //   })
-    //   .then(res => {
-    //     console.log(res);
-    //     setReservations(res.data);
-    //   })
-    
     return () => abortController.abort();
   }
 
