@@ -10,6 +10,7 @@ function list() {
         "people",
         "reservation_id"
         )
+        .orderBy("reservation_time");
 }
 
 function listByDate(date) {
@@ -22,7 +23,8 @@ function listByDate(date) {
             "people",
             "reservation_id"
         )
-        .where({ reservation_date: date });
+        .where({ reservation_date: date })
+        .orderBy("reservation_time");
 }
 
 function create(newReservation) {

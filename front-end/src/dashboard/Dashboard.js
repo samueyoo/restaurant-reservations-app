@@ -13,21 +13,21 @@ const axios = require("axios").default; //Added "default" d/t changed module exp
  *  the date for which the user wants to view reservations.
  * @returns {JSX.Element}
  */
-function Dashboard({ date }) {
+function Dashboard() {
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
   const todaysDate = today()
-  const [dateToDisplay, setDateToDisplay] = useState(todaysDate);
+  const [date, setDate] = useState(todaysDate);
   const history = useHistory();
-  useEffect(loadDashboard, [date, dateToDisplay]);
+  useEffect(loadDashboard, [date]);
 
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:5001";
 
   async function loadDashboard() {
     const abortController = new AbortController();
     setReservationsError(null);
-    console.log("about to listReservations... dateToDisplay:", dateToDisplay)
-    listReservations({ dateToDisplay }, abortController.signal)
+    console.log("about to listReservations... date:", date)
+    listReservations({ date }, abortController.signal)
       .then(res => {
         console.log("listReservations running...:", res); //DEBUG
         console.log(typeof res)
@@ -51,28 +51,32 @@ function Dashboard({ date }) {
     switch (id) {
       case "prev":
         console.log("Previous btn pressed...")
-        setDateToDisplay(previous(dateToDisplay));
-        history.push(`?date=${previous(dateToDisplay)}`)
+        setDate(previous(date));
+        history.push(`?date=${previous(date)}`)
         break;
       case "today":
         console.log("Today btn pressed...")
-        setDateToDisplay(todaysDate);
+        setDate(todaysDate);
         history.push("")
         break;
       case "next":
         console.log("Next btn pressed...")
-        setDateToDisplay(next(dateToDisplay));
-        history.push(`?date=${next(dateToDisplay)}`)
+        setDate(next(date));
+        history.push(`?date=${next(date)}`)
         break;
       default:
         console.log("Everything is terrible and something awful has happened with the date");
     }
   }
 
+  const updateDateAfterSubmit = (resDate) => {
+    setDate(resDate);
+  }
+
   const testAxios = async (e) => {
     console.log("testAxios button pressed!");
-    console.log(`GET request to: ${API_BASE_URL}/reservations?date=${dateToDisplay}`)
-    axios.get(`${API_BASE_URL}/reservations?date=${dateToDisplay}`)
+    console.log(`GET request to: ${API_BASE_URL}/reservations?date=${date}`)
+    axios.get(`${API_BASE_URL}/reservations?date=${date}`)
       .then(res => console.log(res))
   }
 
@@ -82,7 +86,7 @@ function Dashboard({ date }) {
         <Route exact={true} path="/dashboard">
           <h1>Dashboard</h1>
           <div className="d-md-flex mb-3">
-            <h4 className="mb-0">Reservations for {dateToDisplay}</h4>
+            <h4 className="mb-0">Reservations for {date}</h4>
           </div>
           <button id="testAxios" type="button" className="btn btn-secondary" onClick={testAxios}>Test Axios GET Request</button>
           <button id="prev" type="button" className="btn btn-primary" onClick={handleDateChange}>Previous</button>
@@ -93,7 +97,7 @@ function Dashboard({ date }) {
           {JSON.stringify(reservations)} {/* DEBUG */}
         </Route>
         <Route exact={true} path="/reservations/new">
-          <New />
+          <New setDate={updateDateAfterSubmit} />
         </Route>
       </Switch>
     </main>
