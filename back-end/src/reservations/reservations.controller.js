@@ -37,7 +37,11 @@ function validateProperty(property) {
 async function validateDate(req, res, next) {
   const { data = {} } = req.body;
   const { reservation_date } = data;
-  
+  const dateArray = reservation_date.split("-");
+  if (dateArray[0].length !== 4) {
+    return next({ status: 400, message: `Date must be in YYYY-MM-DD format: ${reservation_date}`});
+  }
+  return next()
 }
 
 async function validateTime(req, res, next) {
@@ -47,11 +51,11 @@ async function validateTime(req, res, next) {
 module.exports = {
   list,
   create: [ //Validation of properties not needed since required on front-end side
-    //validateProperty("first_name"), 
-    // validateProperty("last_name"), 
-    // validateProperty("mobile_number"), 
-    // validateProperty("people"), 
-    // validateDate, 
+    validateProperty("first_name"), 
+    validateProperty("last_name"), 
+    validateProperty("mobile_number"), 
+    validateProperty("people"), 
+    validateDate, 
     asyncErrorBoundary(create)
   ],
 };

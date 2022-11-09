@@ -26,16 +26,16 @@ function New() {
         console.log("Submit was clicked; firstName, date:", first_name, reservation_date)
 
         //Validate reservation date, returning null if validation fails
-        const checkedDate = checkDate(reservation_date);
-        console.log('checkedDate...', checkedDate)
-        if (checkedDate.length > 0) {
-            const alertMsg = checkedDate.length > 0 ? checkedDate.join('; ') : checkedDate[0]
-            window.alert(alertMsg);
-            return null;
-        }
+        // const checkedDate = checkDate(reservation_date);
+        // console.log('checkedDate...', checkedDate)
+        // if (checkedDate.length > 0) {
+        //     const alertMsg = checkedDate.length > 0 ? checkedDate.join('; ') : checkedDate[0]
+        //     window.alert(alertMsg);
+        //     return null;
+        // }
 
         //Otherwise, proceed with POST request
-        await fetch(`${API_BASE_URL}/reservations`, {
+        await fetch(`${API_BASE_URL}/reservations`, { //Added Axios after creating POST function; update?
             method: "POST",
             body: JSON.stringify({
                 data: {                
@@ -50,15 +50,22 @@ function New() {
             headers: { 'Content-Type': 'application/json' } 
         })
             .then(response => {
-                console.log("fetch response no JSON:", response);
+                //console.log("fetch response no JSON:", response);
                 return response.json();
+            })
+            .then(response => {
+                if (response.error) {
+                    //console.log("error detected:", response)
+                    throw new Error(response.error);
+                }
+                return response;
             })
             .then(data => console.log("fetch response:", data))
             .then(() => {
                 history.push("/reservations");
             })
             .catch(error => {
-                console.log("error object caught:", error);
+                //console.error(error);
                 setErr(error); //Save error in err state for display
             })
         //history.push("/reservations")
@@ -67,7 +74,7 @@ function New() {
     return (
         <div>
             { err && <ErrorAlert error={err} />}
-
+        
             <h1>
                 Create a New Reservation
             </h1>
@@ -113,7 +120,7 @@ function New() {
                     Date of Reservation: 
                     <input
                         name="reservation_date"
-                        type="date"
+                        type="text"
                         id="reservation_date"
                         placeholder="YYYY-MM-DD" 
                         pattern="\d{4}-\d{2}-\d{2}"
