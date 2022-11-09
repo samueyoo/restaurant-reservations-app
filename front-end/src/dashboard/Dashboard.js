@@ -44,7 +44,7 @@ function Dashboard({ date }) {
     return () => abortController.abort();
   }
 
-  const handleDateChange = (e) => { //Need to check if handler can accept event and id parameters'
+  const handleDateChange = (e) => {
     e.preventDefault()
     console.log("Date change btn pressed...")
     const id = e.target.id;
