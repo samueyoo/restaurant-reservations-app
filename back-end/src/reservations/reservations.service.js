@@ -12,6 +12,19 @@ function list() {
         )
 }
 
+function listByDate(date) {
+    return knex("reservations")
+        .select("first_name",
+            "last_name",
+            "mobile_number",
+            "reservation_date",
+            "reservation_time",
+            "people",
+            "reservation_id"
+        )
+        .where({ reservation_date: date });
+}
+
 function create(newReservation) {
     console.log(newReservation);
     return knex("reservations")
@@ -29,5 +42,6 @@ function create(newReservation) {
 
 module.exports = {
     list,
+    listByDate,
     create,
 }

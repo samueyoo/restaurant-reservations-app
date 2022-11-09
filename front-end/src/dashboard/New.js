@@ -22,11 +22,11 @@ function New() {
   
     const handleNewReservation = async (e) => {
         e.preventDefault();
-        const { firstName, lastName, number, date, time, numberOfPeople } = formData;
-        console.log("Submit was clicked; firstName, date:", firstName, date)
+        const { first_name, last_name, mobile_number, reservation_date, reservation_time, people } = formData;
+        console.log("Submit was clicked; firstName, date:", first_name, reservation_date)
 
         //Validate reservation date, returning null if validation fails
-        const checkedDate = checkDate(date);
+        const checkedDate = checkDate(reservation_date);
         console.log('checkedDate...', checkedDate)
         if (checkedDate.length > 0) {
             const alertMsg = checkedDate.length > 0 ? checkedDate.join('; ') : checkedDate[0]
@@ -39,12 +39,12 @@ function New() {
             method: "POST",
             body: JSON.stringify({
                 data: {                
-                    first_name: firstName,
-                    last_name: lastName,
-                    mobile_number: number,
-                    reservation_date: date,
-                    reservation_time: time,
-                    people: numberOfPeople
+                    first_name: first_name,
+                    last_name: last_name,
+                    mobile_number: mobile_number,
+                    reservation_date: reservation_date,
+                    reservation_time: reservation_time,
+                    people: people
                 }   
             }),
             headers: { 'Content-Type': 'application/json' } 
@@ -55,7 +55,7 @@ function New() {
             })
             .then(data => console.log("fetch response:", data))
             .then(() => {
-                history.push("/reservations"); //Feeling this doesn't work for some reason and needs to be placed outside of a then statement
+                history.push("/reservations");
             })
             .catch(error => {
                 console.log("error object caught:", error);
@@ -76,9 +76,9 @@ function New() {
                 <label>
                     First Name: 
                     <input
-                        name="firstName"
+                        name="first_name"
                         type="text"
-                        id="firstName"
+                        id="first_name"
                         placeholder="First Name"
                         onChange={handleChange}
                         required
@@ -88,9 +88,9 @@ function New() {
                 <label>
                     Last Name: 
                     <input
-                        name="lastName"
+                        name="last_name"
                         type="text"
-                        id="lastName"
+                        id="last_name"
                         placeholder="Last Name"
                         onChange={handleChange}
                         required
@@ -100,9 +100,9 @@ function New() {
                 <label>
                     Mobile Number: 
                     <input
-                        name="number"
+                        name="mobile_number"
                         type="text"
-                        id="number"
+                        id="mobile_number"
                         placeholder="Mobile Number"
                         onChange={handleChange}
                         required
@@ -112,9 +112,9 @@ function New() {
                 <label>
                     Date of Reservation: 
                     <input
-                        name="date"
+                        name="reservation_date"
                         type="date"
-                        id="date"
+                        id="reservation_date"
                         placeholder="YYYY-MM-DD" 
                         pattern="\d{4}-\d{2}-\d{2}"
                         onChange={handleChange}
@@ -125,9 +125,9 @@ function New() {
                 <label>
                     Time of Reservation: 
                     <input
-                        name="time"
+                        name="reservation_time"
                         type="time"
-                        id="time"
+                        id="reservation_time"
                         placeholder="YYYY-MM-DD" 
                         pattern="\d{4}-\d{2}-\d{2}"
                         onChange={handleChange}
@@ -138,9 +138,9 @@ function New() {
                 <label>
                     Number of People in the Party: 
                     <input
-                        name="numberOfPeople"
+                        name="people"
                         type="text"
-                        id="numberOfPeople"
+                        id="people"
                         placeholder="Number of People in the Party"
                         onChange={handleChange}
                         required
