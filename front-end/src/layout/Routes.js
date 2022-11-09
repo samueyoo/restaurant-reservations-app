@@ -14,6 +14,7 @@ import { today } from "../utils/date-time";
  * @returns {JSX.Element}
  */
 function Routes() {
+
   return (
     <Switch>
       <Route exact={true} path="/">

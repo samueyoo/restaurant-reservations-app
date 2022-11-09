@@ -3,10 +3,22 @@
  */
 
 const service = require("./reservations.service");
+const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 
 async function list(req, res) {
+  if (req.query.dateToDisplay) {
+    console.log("Query data detected:", req.query.dateToDisplay);
+    const date = req.query.dateToDisplay;
+    return res.json({ data: await service.listByDate(date) });
+  }
+  console.log("No query data detected, proceeding with full list");
   return res.json({ data: await service.list()});
 }
+
+// async function listByDate(req, res) {
+//   const date = req.query.date;
+//   return res.json({ data: await service.listByDate(date) });
+// }
 
 async function create(req, res) {
   console.log("req.body", req.body)
@@ -40,6 +52,6 @@ module.exports = {
     // validateProperty("mobile_number"), 
     // validateProperty("people"), 
     // validateDate, 
-    create
+    asyncErrorBoundary(create)
   ],
 };

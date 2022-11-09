@@ -1,10 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
+import ErrorAlert from "../layout/ErrorAlert";
 import checkDate from "../utils/checkDate";
 
 function New() {
     const history = useHistory();
     const [formData, setFormData] = useState();
+    // const [errorStatus, setErrorStatus] = useState(false); //Can just check if err state is truthy
+    const [err, setErr] = useState();
+
     function handleChange({ target }) {
         setFormData({
             ...formData,
@@ -18,10 +22,11 @@ function New() {
   
     const handleNewReservation = async (e) => {
         e.preventDefault();
-        const { firstName, lastName, number, date, time, numberOfPeople } = formData;
-        console.log("Submit was clicked; firstName:", firstName)
+        const { first_name, last_name, mobile_number, reservation_date, reservation_time, people } = formData;
+        console.log("Submit was clicked; firstName, date:", first_name, reservation_date)
 
-        const checkedDate = checkDate(date);
+        //Validate reservation date, returning null if validation fails
+        const checkedDate = checkDate(reservation_date);
         console.log('checkedDate...', checkedDate)
         if (checkedDate.length > 0) {
             const alertMsg = checkedDate.length > 0 ? checkedDate.join('; ') : checkedDate[0]
@@ -29,16 +34,17 @@ function New() {
             return null;
         }
 
+        //Otherwise, proceed with POST request
         await fetch(`${API_BASE_URL}/reservations`, {
             method: "POST",
             body: JSON.stringify({
                 data: {                
-                    first_name: firstName,
-                    last_name: lastName,
-                    mobile_number: number,
-                    reservation_date: date,
-                    reservation_time: time,
-                    people: numberOfPeople
+                    first_name: first_name,
+                    last_name: last_name,
+                    mobile_number: mobile_number,
+                    reservation_date: reservation_date,
+                    reservation_time: reservation_time,
+                    people: people
                 }   
             }),
             headers: { 'Content-Type': 'application/json' } 
@@ -48,11 +54,20 @@ function New() {
                 return response.json();
             })
             .then(data => console.log("fetch response:", data))
-        history.push("/reservations")
+            .then(() => {
+                history.push("/reservations");
+            })
+            .catch(error => {
+                console.log("error object caught:", error);
+                setErr(error); //Save error in err state for display
+            })
+        //history.push("/reservations")
     }
 
     return (
         <div>
+            { err && <ErrorAlert error={err} />}
+
             <h1>
                 Create a New Reservation
             </h1>
@@ -61,9 +76,9 @@ function New() {
                 <label>
                     First Name: 
                     <input
-                        name="firstName"
+                        name="first_name"
                         type="text"
-                        id="firstName"
+                        id="first_name"
                         placeholder="First Name"
                         onChange={handleChange}
                         required
@@ -73,9 +88,9 @@ function New() {
                 <label>
                     Last Name: 
                     <input
-                        name="lastName"
+                        name="last_name"
                         type="text"
-                        id="lastName"
+                        id="last_name"
                         placeholder="Last Name"
                         onChange={handleChange}
                         required
@@ -85,9 +100,9 @@ function New() {
                 <label>
                     Mobile Number: 
                     <input
-                        name="number"
+                        name="mobile_number"
                         type="text"
-                        id="number"
+                        id="mobile_number"
                         placeholder="Mobile Number"
                         onChange={handleChange}
                         required
@@ -95,12 +110,13 @@ function New() {
                 </label>
                 <br />
                 <label>
-                    Date of Reservation (MM/DD/YYYY): 
+                    Date of Reservation: 
                     <input
-                        name="date"
-                        type="text"
-                        id="date"
-                        placeholder="Date of Reservation"
+                        name="reservation_date"
+                        type="date"
+                        id="reservation_date"
+                        placeholder="YYYY-MM-DD" 
+                        pattern="\d{4}-\d{2}-\d{2}"
                         onChange={handleChange}
                         required
                     />
@@ -109,10 +125,11 @@ function New() {
                 <label>
                     Time of Reservation: 
                     <input
-                        name="time"
-                        type="text"
-                        id="time"
-                        placeholder="Time of Reservation"
+                        name="reservation_time"
+                        type="time"
+                        id="reservation_time"
+                        placeholder="YYYY-MM-DD" 
+                        pattern="\d{4}-\d{2}-\d{2}"
                         onChange={handleChange}
                         required
                     />
@@ -121,9 +138,9 @@ function New() {
                 <label>
                     Number of People in the Party: 
                     <input
-                        name="numberOfPeople"
+                        name="people"
                         type="text"
-                        id="numberOfPeople"
+                        id="people"
                         placeholder="Number of People in the Party"
                         onChange={handleChange}
                         required
