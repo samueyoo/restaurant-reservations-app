@@ -31,18 +31,13 @@ function New({ updateDateAfterSubmit }) {
         //console.log("handleNewReservation; reservation_time:", reservation_time)
 
         const validDay = validateDateIsBefore(reservation_date);
-        if (validDay.length > 0) {
-            const errorMessages = validDay.join("; ");
-            console.log(errorMessages);
-            setErr({ message: errorMessages})
+        if (validDay) {
+            setErr(validDay);
             return false;
         }
         const validTime = validateTime(reservation_time);
-        console.log("handleNewReservation; reservation_time:", reservation_time)
-        if (validTime.length > 0) {
-            const errorMessages = validTime.join("; ");
-            console.log(errorMessages);
-            setErr({ message: errorMessages})
+        if (validTime) {
+            setErr(validTime);
             return false;
         }
 

@@ -12,5 +12,11 @@ export default function validateDateIsBefore(date) {
         console.log("Reservation can't be before today");
         errors.push("Reservation cannot be in the past");
     }
-    return errors;
+
+    if (errors.length > 0) {
+        const errorMessages = errors.join("; ");
+        console.log(errorMessages);
+        return ({ message: errorMessages });
+    }
+    return null;
 }
