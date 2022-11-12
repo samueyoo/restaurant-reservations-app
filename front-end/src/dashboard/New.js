@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
 import checkDate from "../utils/checkDate";
+import validateDateIsBefore from "../utils/validateDate";
 
 function New({ updateDateAfterSubmit }) {
     const history = useHistory();
@@ -26,17 +27,24 @@ function New({ updateDateAfterSubmit }) {
         const { first_name, last_name, mobile_number, reservation_date, reservation_time, people } = formData;
         console.log("Submit was clicked; firstName, date:", first_name, reservation_date)
 
+        const valid = validateDateIsBefore(reservation_date);
+        if (valid.length > 0) {
+            const errorMessages = valid.join("; ");
+            console.log(errorMessages);
+            setErr({ message: errorMessages})
+            return false;
+        }
+
         await fetch(`${API_BASE_URL}/reservations`, { //Updating with axios.post breaks <ErrorAlert /> component (does not read error.message properly)
             method: "POST",
             body: JSON.stringify({
                 data: {
-                    from_client: true,
                     first_name: first_name,
                     last_name: last_name,
                     mobile_number: mobile_number,
                     reservation_date: reservation_date,
                     reservation_time: reservation_time,
-                    people: people,
+                    people: Number(people),
                 }   
             }),
             headers: { 'Content-Type': 'application/json' } 
@@ -54,7 +62,7 @@ function New({ updateDateAfterSubmit }) {
             })
             .then(data => console.log("fetch response:", data))
             .then(() => {
-                updateDateAfterSubmit(reservation_date);
+                //updateDateAfterSubmit(reservation_date);
                 history.push(`/dashboard?date=${reservation_date}`);
             })
             .catch(error => {

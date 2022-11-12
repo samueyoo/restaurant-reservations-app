@@ -31,11 +31,8 @@ function validateProperty(property) {
 
 function validatePeople(req, res, next) {
   const { data = {} } = req.body;
-  //const checkPeople = Number(data.people);
-  if (!data.from_client) { //temp measure to pass test...
-    if (typeof data.people !== "number") {
-      return next({ status: 400, message: `people must be a number; received: ${data.people}` });
-    }
+  if (typeof data.people !== "number") {
+    return next({ status: 400, message: `people must be a number; received: ${data.people}` });
   }
   return next();
 }
@@ -59,10 +56,20 @@ function validateTime(req, res, next) {
   if (!(Number(timeArray[1]) >= 0) || !(Number(timeArray[1]) < 60)) {
     return next({ status: 400, message: `reservation_time must be a valid time; received: ${time}`})
   }
-  // if (!(Number(timeArray[2]) >= 0) || !(Number(timeArray[2]) < 60)) {
-  //   return next({ status: 400, message: `reservation_time must be a valid time; received: ${time}`})
-  // }
+
   return next()
+}
+
+function validateClosedFuture(req, res, next) {
+  const day = new Date(req.body.data.reservation_date.replace(/-/g, '\/'));
+  const today = new Date();
+  console.log("Backend; day = ", day)
+  if (day.getTime() < today.getTime()) {
+    return next({ status: 400, message: "Reservations must be in the future" })
+  }
+  if (day.getDay() === 2) {
+    return next({ status: 400, message: "Restaurant is closed on Tuesdays" })
+  }
 }
 
 module.exports = {
@@ -75,6 +82,7 @@ module.exports = {
     validateProperty("reservation_date"), 
     validateProperty("reservation_time"), 
     validatePeople,
+    validateClosedFuture,
     validateDate, 
     validateTime,
     asyncErrorBoundary(create)

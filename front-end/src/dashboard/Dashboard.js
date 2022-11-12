@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { listReservations } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
-import { Route, Switch, useHistory } from "react-router-dom";
+import { Route, Switch, useHistory, useSearchParams } from "react-router-dom";
 import New from "./New";
 import ReservationsDisplay from "./ReservationsDisplay";
 import { today, previous, next } from "../utils/date-time";
@@ -18,7 +18,9 @@ function Dashboard() {
   const [reservationsError, setReservationsError] = useState(null);
   const todaysDate = today()
   const [date, setDate] = useState(todaysDate);
+  //useParams hook; check back in notes and replace usage of date state
   const history = useHistory();
+  useEffect(loadDashboard, []);
   useEffect(loadDashboard, [date]);
 
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:5001";
@@ -27,11 +29,13 @@ function Dashboard() {
     const abortController = new AbortController();
     setReservationsError(null);
     console.log("about to listReservations... date:", date)
-    listReservations({ date }, abortController.signal)
+    
+    //listReservations({ date }, abortController.signal)
+    axios.get(`${API_BASE_URL}/reservations?date=${date}`)
       .then(res => {
-        console.log("listReservations running...:", res); //DEBUG
-        console.log(typeof res)
-        return res;
+        console.log("listReservations running...:", res.data.data); //DEBUG
+        console.log(typeof res.data.data)
+        return res.data.data;
       })
       .then(res => {
         setReservations(res)
@@ -88,7 +92,7 @@ function Dashboard() {
           <div className="d-md-flex mb-3">
             <h4 className="mb-0">Reservations for {date}</h4>
           </div>
-          <button id="testAxios" type="button" className="btn btn-secondary" onClick={testAxios}>Test Axios GET Request</button>
+          <button id="testAxios" type="button" className="btn btn-secondary" onClick={loadDashboard}>Test Axios GET Request</button>
           <button id="prev" type="button" className="btn btn-primary" onClick={handleDateChange}>Previous</button>
           <button id="today" type="button" className="btn btn-primary" onClick={handleDateChange}>Today</button>
           <button id="next" type="button" className="btn btn-primary" onClick={handleDateChange}>Next</button>
