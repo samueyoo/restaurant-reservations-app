@@ -1,7 +1,7 @@
 export default function validateDateIsBefore(date) {
     const day = new Date(date.replace(/-/g, '\/'));
     //console.log(day);
-    //console.log("day", day.getDay());
+    console.log("day", day.getDay());
     const dayNow = new Date();
     const errors = [];
     if (day.getDay() === 2) {

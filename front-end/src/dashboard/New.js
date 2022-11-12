@@ -4,6 +4,7 @@ import { Link, useHistory } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
 import checkDate from "../utils/checkDate";
 import validateDateIsBefore from "../utils/validateDate";
+import validateTime from "../utils/validateTime";
 
 function New({ updateDateAfterSubmit }) {
     const history = useHistory();
@@ -27,9 +28,19 @@ function New({ updateDateAfterSubmit }) {
         const { first_name, last_name, mobile_number, reservation_date, reservation_time, people } = formData;
         console.log("Submit was clicked; firstName, date:", first_name, reservation_date)
 
-        const valid = validateDateIsBefore(reservation_date);
-        if (valid.length > 0) {
-            const errorMessages = valid.join("; ");
+        //console.log("handleNewReservation; reservation_time:", reservation_time)
+
+        const validDay = validateDateIsBefore(reservation_date);
+        if (validDay.length > 0) {
+            const errorMessages = validDay.join("; ");
+            console.log(errorMessages);
+            setErr({ message: errorMessages})
+            return false;
+        }
+        const validTime = validateTime(reservation_time);
+        console.log("handleNewReservation; reservation_time:", reservation_time)
+        if (validTime.length > 0) {
+            const errorMessages = validTime.join("; ");
             console.log(errorMessages);
             setErr({ message: errorMessages})
             return false;

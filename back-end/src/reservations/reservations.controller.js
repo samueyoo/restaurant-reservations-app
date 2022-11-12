@@ -49,6 +49,14 @@ function validateDate(req, res, next) {
 
 function validateTime(req, res, next) {
   const time = req.body.data.reservation_time;
+  if (time < "10:30") {
+    console.log("validateTime; Time cannot be before 10:30 AM");
+    return next({ status: 400, message: `Time cannot be before 10:30 AM`});
+  }
+  if (time > "21:30") {
+    console.log("validateTime; Time cannot be after 9:30 PM");
+    return next({ status: 400, message: `Time cannot be after 9:30 PM`});
+  }
   const timeArray = time.split(":");
   if (!(Number(timeArray[0]) >= 0) || !(Number(timeArray[0]) <= 24)) {
     return next({ status: 400, message: `reservation_time must be a valid time; received: ${time}`})
@@ -70,6 +78,7 @@ function validateClosedFuture(req, res, next) {
   if (day.getDay() === 2) {
     return next({ status: 400, message: "Restaurant is closed on Tuesdays" })
   }
+  next();
 }
 
 module.exports = {
