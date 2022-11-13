@@ -8,5 +8,12 @@ export default function validateTime(timeInput) {
         console.log("validateTime; Time cannot be after 9:30 PM");
         errors.push("Time cannot be after 9:30 PM");
     }
-    return errors;
+
+    if (errors.length > 0) {
+        const errorMessages = errors.join("; ");
+        console.log(errorMessages);
+        return { message: errorMessages}
+
+    }
+    return null;
 }

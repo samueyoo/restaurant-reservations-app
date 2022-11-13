@@ -9,6 +9,7 @@ function ReservationsDisplay({ reservations }) {
     })
     return (
         <div>
+            <h3>Reservations</h3>
             {formattedReservations}
         </div>
     )

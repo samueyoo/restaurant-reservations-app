@@ -16,7 +16,7 @@ export default function validateDateIsBefore(date) {
     if (errors.length > 0) {
         const errorMessages = errors.join("; ");
         console.log(errorMessages);
-        return ({ message: errorMessages });
+        return { message: errorMessages };
     }
     return null;
 }

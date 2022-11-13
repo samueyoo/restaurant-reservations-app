@@ -1,16 +1,10 @@
-/**
- * Defines the router for reservation resources.
- *
- * @type {Router}
- */
-
 const router = require("express").Router();
 const notFound = require("../errors/notFound");
-const controller = require("./reservations.controller");
+const controller = require("./tables.controller");
 
 router
-    .route("/:reservationId")
-    .get(controller.read)
+    .route("/:table_id/seat")
+    .put(controller.update)
     .all(notFound);
 
 router

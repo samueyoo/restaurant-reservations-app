@@ -14,10 +14,13 @@ async function list(req, res) {
   return res.json({ data: await service.list()});
 }
 
+async function read(req, res) {
+  return res.json({ data: await service.read(req.params.reservationId)})
+}
+
 async function create(req, res) {
   console.log("req.body", req.body)
-  const { from_client, ...trueData } = req.body.data;
-  const response = await service.create(trueData);
+  const response = await service.create(req.body.data);
   return res.status(201).json({ data: response });
 }
 
@@ -83,6 +86,7 @@ function validateClosedFuture(req, res, next) {
 
 module.exports = {
   list,
+  read,
   create: [ //Validation of properties not needed since required on front-end side
     validateProperty("first_name"), 
     validateProperty("last_name"), 
