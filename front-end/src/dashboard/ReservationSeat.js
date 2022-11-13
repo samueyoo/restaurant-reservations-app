@@ -27,11 +27,13 @@ function ReservationSeat() {
 
     async function handleSubmit(e) {
         e.preventDefault();
+        // console.log("tables", tables, tables.length)
+        // if (tables.length === 0) return null;
 
         //Pull table info from current list of tables saved under the tables state
         const tableCheck = tables.find(table => {
             console.log("formData & table.table_id:", formData, "vs", table.table_id)
-            return formData.toString() === table.table_id.toString();
+            return formData == table.table_id;
         })
         //Check if table already is assigned to a reservation
         if (tableCheck.reservation_id) {
@@ -81,12 +83,13 @@ function ReservationSeat() {
                         onChange={handleChange}
                         required
                     >
+                        <option value="none" selected disabled hidden>Select a Table</option>
                         {mappedOptions}
                     </select>
                 </label>
                 <br />
                 <button type="button" className="btn btn-secondary" onClick={() => history.goBack()}>Cancel</button>
-                <button type="submit" className="btn btn-primary">Submit</button>
+                {formData ? <button type="submit" className="btn btn-primary">Submit</button> : null}
             </form>
         </div>
     )

@@ -15,7 +15,14 @@ async function list(req, res) {
 }
 
 async function read(req, res) {
-  return res.json({ data: await service.read(req.params.reservationId)})
+  return res.status(200).json({ data: res.locals.data })
+}
+
+async function validateIdExists(req, res, next) {
+  const data = await service.read(req.params.reservationId);
+  if (!data) return next({ status: 404, message: `reservation_id does not exist; received: ${req.params.reservationId}`});
+  res.locals.data = data;
+  next();
 }
 
 async function create(req, res) {
@@ -53,12 +60,12 @@ function validateDate(req, res, next) {
 function validateTime(req, res, next) {
   const time = req.body.data.reservation_time;
   if (time < "10:30") {
-    console.log("validateTime; Time cannot be before 10:30 AM");
-    return next({ status: 400, message: `Time cannot be before 10:30 AM`});
+    console.log("validateTime; reservation_time cannot be before 10:30 AM");
+    return next({ status: 400, message: `reservation_time cannot be before 10:30 AM`});
   }
   if (time > "21:30") {
-    console.log("validateTime; Time cannot be after 9:30 PM");
-    return next({ status: 400, message: `Time cannot be after 9:30 PM`});
+    console.log("validateTime; reservation_time cannot be after 9:30 PM");
+    return next({ status: 400, message: `reservation_time cannot be after 9:30 PM`});
   }
   const timeArray = time.split(":");
   if (!(Number(timeArray[0]) >= 0) || !(Number(timeArray[0]) <= 24)) {
@@ -86,7 +93,10 @@ function validateClosedFuture(req, res, next) {
 
 module.exports = {
   list,
-  read,
+  read: [
+    validateIdExists,
+    read
+  ],
   create: [ //Validation of properties not needed since required on front-end side
     validateProperty("first_name"), 
     validateProperty("last_name"), 

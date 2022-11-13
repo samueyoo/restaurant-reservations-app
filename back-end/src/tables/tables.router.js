@@ -5,6 +5,7 @@ const controller = require("./tables.controller");
 router
     .route("/:table_id/seat")
     .put(controller.update)
+    .delete(controller.unassign)
     .all(notFound);
 
 router

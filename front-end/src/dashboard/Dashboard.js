@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ErrorAlert from "../layout/ErrorAlert";
-import { Route, Switch, useHistory } from "react-router-dom";
+import { Route, Switch, useHistory, useLocation } from "react-router-dom";
 import New from "./New";
 import ReservationsDisplay from "./ReservationsDisplay";
 import { today, previous, next } from "../utils/date-time";
@@ -27,14 +27,21 @@ function Dashboard() {
   useEffect(loadDashboard, [date]);
 
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:5001";
+  const dateQuery = new URLSearchParams(useLocation().search).get("date");
+
+  function getDateQuery() {
+    // Use get method to retrieve queryParam
+    console.log("Dashboard; dateQuery:", dateQuery)
+    return dateQuery;
+  }
+
 
   async function loadDashboard() {
     const abortController = new AbortController();
     setReservationsError(null);
-    console.log("about to listReservations... date:", date)
-    
+    console.log("about to listReservations... dateQuery/date:", dateQuery, "/", date)
     //listReservations({ date }, abortController.signal)
-    await axios.get(`${API_BASE_URL}/reservations?date=${date}`)
+    await axios.get(`${API_BASE_URL}/reservations?date=${dateQuery ? dateQuery : date}`)
       .then(res => {
         console.log("listReservations running...:", res.data.data); //DEBUG
         console.log(typeof res.data.data)
@@ -98,9 +105,10 @@ function Dashboard() {
         <Route exact={true} path="/dashboard">
           <h1>Dashboard</h1>
           <div className="d-md-flex mb-3">
-            <h4 className="mb-0">Reservations for {date}</h4>
+            <h4 className="mb-0">Reservations for {dateQuery ? dateQuery : date}</h4>
           </div>
-          <button id="testAxios" type="button" className="btn btn-secondary" onClick={loadDashboard}>Test Axios GET Request</button>
+          <button id="test1" type="button" className="btn btn-secondary" onClick={() => console.log("tables", tables)}>Test tables state</button>
+          <button id="test2" type="button" className="btn btn-secondary" onClick={getDateQuery}>Test query retrieval</button>
           <button id="prev" type="button" className="btn btn-primary" onClick={handleDateChange}>Previous</button>
           <button id="today" type="button" className="btn btn-primary" onClick={handleDateChange}>Today</button>
           <button id="next" type="button" className="btn btn-primary" onClick={handleDateChange}>Next</button>
@@ -109,7 +117,7 @@ function Dashboard() {
           <Container>
             <Row>
               <Col><ReservationsDisplay reservations={reservations} /></Col>
-              <Col><TablesDisplay tables={tables} /></Col>
+              <Col><TablesDisplay tables={tables} setTables={setTables} setError={setReservationsError} /></Col>
               
             </Row>
           </Container>
