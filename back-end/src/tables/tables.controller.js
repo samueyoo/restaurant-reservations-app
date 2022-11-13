@@ -1,20 +1,11 @@
 const service = require("./tables.service");
 const reservationService = require("../reservations/reservations.service")
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
+const { whereExists } = require("../db/connection");
 
 async function list(req, res) {
     return res.json({ data: await service.list() });
 }
-
-//Validate the reservation size vs table capacity
-    //Get the current table data
-    //Get the current reservation data
-        //We are provided IDs for both
-//Validate that the table is not already assigned a reservation
-// function validateCapacity(req, res, next) {
-//     const { reservation_id, table_id } = req.body.data;
-
-// }
 
 async function create(req, res) {
     console.log("req.body", req.body)
@@ -83,6 +74,29 @@ async function validateCapactityForParty(req, res, next) {
     next();
 }
 
+async function unassign(req, res) {
+    const tableId = req.params.table_id;
+    await service.unassign(tableId)
+    return res.status(200).json({ data: await service.list() });
+}
+
+async function validateTableExists(req, res, next) {
+    const response = await service.read(req.params.table_id);
+    if (!response) {
+        return next({ status: 404, message: `Table does not exist; received: ${req.params.table_id}`});
+    }
+    res.locals.table = response;
+    next();
+}
+
+async function validateTableOccupancy(req, res, next) {
+    const data = res.locals.table;
+    if (!data.reservation_id) {
+        return next({ status: 400, message: `table_id is not occupied`});
+    }
+    next();
+}
+
 module.exports = {
     list,
     create: [
@@ -98,5 +112,9 @@ module.exports = {
         validateCapactityForParty,
         update
     ],
-
+    unassign: [
+        validateTableExists,
+        validateTableOccupancy,
+        unassign
+    ]
 }
