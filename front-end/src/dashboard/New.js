@@ -1,12 +1,10 @@
-import axios from "axios";
 import React, { useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
-import checkDate from "../utils/checkDate";
 import validateDateIsBefore from "../utils/validateDate";
 import validateTime from "../utils/validateTime";
 
-function New({ updateDateAfterSubmit }) {
+function New({ setDateNew }) {
     const history = useHistory();
     const [formData, setFormData] = useState();
     // const [errorStatus, setErrorStatus] = useState(false); //Can just check if err state is truthy
@@ -27,9 +25,7 @@ function New({ updateDateAfterSubmit }) {
         e.preventDefault();
         const { first_name, last_name, mobile_number, reservation_date, reservation_time, people } = formData;
         console.log("Submit was clicked; firstName, date:", first_name, reservation_date)
-
-        //console.log("handleNewReservation; reservation_time:", reservation_time)
-
+        
         const validDay = validateDateIsBefore(reservation_date);
         if (validDay) {
             setErr(validDay);
@@ -68,9 +64,11 @@ function New({ updateDateAfterSubmit }) {
             })
             .then(data => console.log("fetch response:", data))
             .then(() => {
-                //updateDateAfterSubmit(reservation_date);
-                history.push(`/dashboard?date=${reservation_date}`);
+                console.log("New; about to setDate with:", reservation_date);
+                console.log("setDateNew function:", typeof setDateNew)
+                setDateNew(reservation_date);
             })
+            .then(() => history.push(`/dashboard?date=${reservation_date}`))
             .catch(error => {
                 console.error(error);
                 setErr(error); //Save error in err state for display

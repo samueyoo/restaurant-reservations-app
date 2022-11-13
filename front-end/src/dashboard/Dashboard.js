@@ -5,6 +5,10 @@ import { Route, Switch, useHistory, useSearchParams } from "react-router-dom";
 import New from "./New";
 import ReservationsDisplay from "./ReservationsDisplay";
 import { today, previous, next } from "../utils/date-time";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import TablesDisplay from "./TablesDisplay";
 const axios = require("axios").default; //Added "default" d/t changed module export syntax with post 1.0 version per Axios's issues page
 
 /**
@@ -20,7 +24,6 @@ function Dashboard() {
   const [date, setDate] = useState(todaysDate);
   //useParams hook; check back in notes and replace usage of date state
   const history = useHistory();
-  useEffect(loadDashboard, []);
   useEffect(loadDashboard, [date]);
 
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:5001";
@@ -74,15 +77,16 @@ function Dashboard() {
   }
 
   const updateDateAfterSubmit = (resDate) => {
+    console.log("Dashboard; updateDateAfterSubmit triggered");
     setDate(resDate);
   }
 
-  const testAxios = async (e) => {
-    console.log("testAxios button pressed!");
-    console.log(`GET request to: ${API_BASE_URL}/reservations?date=${date}`)
-    axios.get(`${API_BASE_URL}/reservations?date=${date}`)
-      .then(res => console.log(res))
-  }
+  // const testAxios = async (e) => {
+  //   console.log("testAxios button pressed!");
+  //   console.log(`GET request to: ${API_BASE_URL}/reservations?date=${date}`)
+  //   axios.get(`${API_BASE_URL}/reservations?date=${date}`)
+  //     .then(res => console.log(res))
+  // }
 
   return (
     <main>
@@ -97,11 +101,19 @@ function Dashboard() {
           <button id="today" type="button" className="btn btn-primary" onClick={handleDateChange}>Today</button>
           <button id="next" type="button" className="btn btn-primary" onClick={handleDateChange}>Next</button>
           <ErrorAlert error={reservationsError} />
-          <ReservationsDisplay reservations={reservations} />
+
+          <Container>
+            <Row>
+              <Col><ReservationsDisplay reservations={reservations} /></Col>
+              <Col><TablesDisplay tables={[{ table_id: "table1"}, { table_id: "table2"}, { table_id: "table3"}]} /></Col>
+              
+            </Row>
+          </Container>
+
           {JSON.stringify(reservations)} {/* DEBUG */}
         </Route>
         <Route exact={true} path="/reservations/new">
-          <New setDate={updateDateAfterSubmit} />
+          <New setDateNew={setDate} />
         </Route>
       </Switch>
     </main>
