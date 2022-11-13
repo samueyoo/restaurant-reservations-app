@@ -122,7 +122,6 @@ function Dashboard() {
             </Row>
           </Container>
 
-          {JSON.stringify(reservations)} {/* DEBUG */}
         </Route>
         <Route exact={true} path="/reservations/new">
           <New setDateNew={setDate} />
