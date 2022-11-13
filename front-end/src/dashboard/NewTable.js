@@ -1,21 +1,46 @@
-import React from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-//const axios = require("axios").default;
+import axios from "axios";
+import ErrorAlert from "../layout/ErrorAlert";
 
 function NewTable() {
+    const [formData, setFormData] = useState();
+    const [err, setErr] = useState();
     const history = useHistory();
+    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:5001";
 
-    function handleChange() {
-
+    function handleChange({ target }) {
+        setFormData({
+            ...formData,
+            [target.name]: target.value
+        })
     }
 
-    function handleNewTable(e) {
+    async function handleNewTable(e) {
         e.preventDefault();
-        history.push('/dashboard');
+        const { table_name, capacity } = formData;
+        await axios.post(`${API_BASE_URL}/tables`, {
+            data: {
+                table_name: table_name,
+                capacity: Number(capacity)
+            }
+        })
+            .then(res => {
+                if (res.error) throw new Error(res.error);
+                return res;
+            })
+            .then(() => history.push("/dashboard"))
+            .catch(error => {
+                console.error(error);
+                setErr(error);
+            })
+            history.push('/dashboard');
     }
 
     return (
         <div>
+            { err && <ErrorAlert error={err} />}
+
             <h1>
                 Create a New Table
             </h1>

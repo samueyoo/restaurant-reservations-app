@@ -27,6 +27,14 @@ function listByDate(date) {
         .orderBy("reservation_time");
 }
 
+function read(reservationId) {
+    return knex("reservations")
+        .select("people",
+            "reservation_id")
+        .where({ reservation_id: reservationId })
+        .first();
+}
+
 function create(newReservation) {
     console.log(newReservation);
     return knex("reservations")
@@ -45,5 +53,6 @@ function create(newReservation) {
 module.exports = {
     list,
     listByDate,
+    read,
     create,
 }

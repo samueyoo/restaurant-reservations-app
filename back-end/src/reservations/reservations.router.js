@@ -9,6 +9,11 @@ const notFound = require("../errors/notFound");
 const controller = require("./reservations.controller");
 
 router
+    .route("/:reservationId")
+    .get(controller.read)
+    .all(notFound);
+
+router
     .route("/")
     .get(controller.list)
     .post(controller.create)

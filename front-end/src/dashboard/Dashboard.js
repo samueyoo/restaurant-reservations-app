@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { listReservations } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
-import { Route, Switch, useHistory, useSearchParams } from "react-router-dom";
+import { Route, Switch, useHistory } from "react-router-dom";
 import New from "./New";
 import ReservationsDisplay from "./ReservationsDisplay";
 import { today, previous, next } from "../utils/date-time";
@@ -20,6 +19,7 @@ const axios = require("axios").default; //Added "default" d/t changed module exp
 function Dashboard() {
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
+  const [tables, setTables] = useState([]);
   const todaysDate = today()
   const [date, setDate] = useState(todaysDate);
   //useParams hook; check back in notes and replace usage of date state
@@ -34,7 +34,7 @@ function Dashboard() {
     console.log("about to listReservations... date:", date)
     
     //listReservations({ date }, abortController.signal)
-    axios.get(`${API_BASE_URL}/reservations?date=${date}`)
+    await axios.get(`${API_BASE_URL}/reservations?date=${date}`)
       .then(res => {
         console.log("listReservations running...:", res.data.data); //DEBUG
         console.log(typeof res.data.data)
@@ -47,6 +47,10 @@ function Dashboard() {
         console.log("Error occurred with listReservations...:", err)
         setReservationsError(err)
       });
+    
+    await axios.get(`${API_BASE_URL}/tables`)
+        .then(res => setTables(res.data.data))
+
 
     return () => abortController.abort();
   }
@@ -105,7 +109,7 @@ function Dashboard() {
           <Container>
             <Row>
               <Col><ReservationsDisplay reservations={reservations} /></Col>
-              <Col><TablesDisplay tables={[{ table_id: "table1"}, { table_id: "table2"}, { table_id: "table3"}]} /></Col>
+              <Col><TablesDisplay tables={tables} /></Col>
               
             </Row>
           </Container>

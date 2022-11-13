@@ -64,9 +64,9 @@ function New({ setDateNew }) {
             })
             .then(data => console.log("fetch response:", data))
             .then(() => {
-                console.log("New; about to setDate with:", reservation_date);
-                console.log("setDateNew function:", typeof setDateNew)
-                setDateNew(reservation_date);
+                //console.log("New; about to setDate with:", reservation_date);
+                //console.log("setDateNew function:", typeof setDateNew)
+                //setDateNew(reservation_date);
             })
             .then(() => history.push(`/dashboard?date=${reservation_date}`))
             .catch(error => {
