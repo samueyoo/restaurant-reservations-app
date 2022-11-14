@@ -4,7 +4,7 @@ import ErrorAlert from "../layout/ErrorAlert";
 import validateDateIsBefore from "../utils/validateDate";
 import validateTime from "../utils/validateTime";
 
-function New({ setDateNew }) {
+function New() {
     const history = useHistory();
     const [formData, setFormData] = useState();
     // const [errorStatus, setErrorStatus] = useState(false); //Can just check if err state is truthy

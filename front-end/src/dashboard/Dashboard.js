@@ -57,7 +57,7 @@ function Dashboard() {
     
     await axios.get(`${API_BASE_URL}/tables`)
         .then(res => setTables(res.data.data))
-
+        .catch(error => setReservationsError(error));
 
     return () => abortController.abort();
   }
@@ -87,11 +87,6 @@ function Dashboard() {
     }
   }
 
-  const updateDateAfterSubmit = (resDate) => {
-    console.log("Dashboard; updateDateAfterSubmit triggered");
-    setDate(resDate);
-  }
-
   // const testAxios = async (e) => {
   //   console.log("testAxios button pressed!");
   //   console.log(`GET request to: ${API_BASE_URL}/reservations?date=${date}`)
@@ -109,6 +104,8 @@ function Dashboard() {
           </div>
           <button id="test1" type="button" className="btn btn-secondary" onClick={() => console.log("tables", tables)}>Test tables state</button>
           <button id="test2" type="button" className="btn btn-secondary" onClick={getDateQuery}>Test query retrieval</button>
+          <button id="test3" type="button" className="btn btn-secondary" onClick={() => console.log("reservations", reservations)}>Test reservations state</button>
+          
           <button id="prev" type="button" className="btn btn-primary" onClick={handleDateChange}>Previous</button>
           <button id="today" type="button" className="btn btn-primary" onClick={handleDateChange}>Today</button>
           <button id="next" type="button" className="btn btn-primary" onClick={handleDateChange}>Next</button>
@@ -116,15 +113,15 @@ function Dashboard() {
 
           <Container>
             <Row>
-              <Col><ReservationsDisplay reservations={reservations} /></Col>
-              <Col><TablesDisplay tables={tables} setTables={setTables} setError={setReservationsError} /></Col>
+              <Col><ReservationsDisplay reservations={reservations} setReservations={setReservations} /></Col>
+              <Col><TablesDisplay tables={tables} setTables={setTables} setError={setReservationsError} reservations={reservations} setReservations={setReservations} loadDash={loadDashboard} /></Col>
               
             </Row>
           </Container>
 
         </Route>
         <Route exact={true} path="/reservations/new">
-          <New setDateNew={setDate} />
+          <New />
         </Route>
       </Switch>
     </main>

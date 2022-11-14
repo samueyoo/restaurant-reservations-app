@@ -42,10 +42,12 @@ function validateCapacity(req, res, next) {
 
 }
 
-async function update(req, res) {
+async function assign(req, res) {
     const { reservation_id } = req.body.data;
     const table_id = req.params.table_id;
-    return res.status(200).json({ data: await service.update(reservation_id, table_id)})
+    const response = await service.assign(reservation_id, table_id)
+    const reservationResponse = await reservationService.updateStatus("seated", reservation_id);
+    return res.status(200).json({ data: response})
 }
 
 async function validateReservationExists(req, res, next) {
@@ -55,6 +57,14 @@ async function validateReservationExists(req, res, next) {
         return next({ status: 404, message: `reservation_id does not exist; received: ${reservation_id}`})
     }
     res.locals.readReservation = readReservation;
+    next();
+}
+
+function validateAlreadySeated(req, res, next) {
+    const readReservation = res.locals.readReservation;
+    if (readReservation.status === "seated") {
+        return next({ status: 400, message: "Reservation status is already set to seated" });
+    }
     next();
 }
 
@@ -74,9 +84,10 @@ async function validateCapactityForParty(req, res, next) {
     next();
 }
 
-async function unassign(req, res) {
+async function unassign(req, res) { //THIS ONE
     const tableId = req.params.table_id;
     await service.unassign(tableId)
+    await reservationService.updateStatus("finished", res.locals.table.reservation_id)
     return res.status(200).json({ data: await service.list() });
 }
 
@@ -106,11 +117,12 @@ module.exports = {
         validateCapacity,
         create
     ],
-    update: [
+    assign: [
         validateProperty("reservation_id"),
         validateReservationExists,
+        validateAlreadySeated,
         validateCapactityForParty,
-        update
+        assign
     ],
     unassign: [
         validateTableExists,

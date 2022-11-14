@@ -8,8 +8,10 @@ function list() {
         "reservation_date",
         "reservation_time",
         "people",
-        "reservation_id"
+        "reservation_id",
+        "status"
         )
+        .whereNot({ status: "finished"})
         .orderBy("reservation_time");
 }
 
@@ -21,16 +23,19 @@ function listByDate(date) {
             "reservation_date",
             "reservation_time",
             "people",
-            "reservation_id"
+            "reservation_id",
+            "status"
         )
         .where({ reservation_date: date })
+        .whereNot({ status: "finished"})
         .orderBy("reservation_time");
 }
 
 function read(reservationId) {
     return knex("reservations")
         .select("people",
-            "reservation_id")
+            "reservation_id",
+            "status")
         .where({ reservation_id: reservationId })
         .first();
 }
@@ -50,9 +55,24 @@ function create(newReservation) {
         });
 }
 
+function updateStatus(newStatus, reservationId) {
+    return knex("reservations")
+        .select("*")
+        .where({ reservation_id: reservationId })
+        .update({ status: newStatus }, "*")
+        .then(updatedRecord => {
+            return updatedRecord[0];
+        })
+        .catch(error => {
+            console.error("Error has occurred", error);
+            return error;
+        });
+}
+
 module.exports = {
     list,
     listByDate,
     read,
     create,
+    updateStatus,
 }

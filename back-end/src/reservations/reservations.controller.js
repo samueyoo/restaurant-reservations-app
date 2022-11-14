@@ -91,6 +91,33 @@ function validateClosedFuture(req, res, next) {
   next();
 }
 
+async function validatePostStatus(req, res, next) {
+  const { status = "" } = req.body.data;
+  if (status === "seated" || status === "finished") {
+    return next({ status: 400, message: `status should be "booked" only; received: ${status}` });
+  }
+  return next();
+}
+
+async function updateStatus(req, res) {
+  const { status } = req.body.data;
+  const response = await service.updateStatus(status, req.params.reservationId);
+  console.log("reservations.controller.update; response:", response)
+  return res.status(200).json({ data: response});
+}
+
+async function validatePutStatus(req, res, next) {
+  const { status = "" } = req.body.data;
+  if (status === "unknown") {
+    return next({ status: 400, message: `status should not be unknown; received: ${status}`});
+  }
+  console.log("validatePutStatus; res.locals.data:", res.locals.data)
+  if (res.locals.data.status === "finished") {
+    return next({ status: 400, message: `status is already finished; current status: ${status}`});
+  }
+  next();
+}
+
 module.exports = {
   list,
   read: [
@@ -108,6 +135,12 @@ module.exports = {
     validateClosedFuture,
     validateDate, 
     validateTime,
+    validatePostStatus,
     asyncErrorBoundary(create)
   ],
+  updateStatus: [
+    validateIdExists,
+    validatePutStatus,
+    updateStatus,
+  ]
 };

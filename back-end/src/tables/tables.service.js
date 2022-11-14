@@ -25,13 +25,13 @@ function create(newTable) {
         })
 }
 
-function update(reservationId, tableId) {
+function assign(reservationId, tableId) {
     return knex("tables")
         .select("*")
         .where({ table_id: tableId })
         .update({
             reservation_id: reservationId
-        })
+        }, "*")
 }
 
 function unassign(tableId) {
@@ -47,6 +47,6 @@ module.exports = {
     list,
     read,
     create,
-    update,
+    assign,
     unassign,
 }
