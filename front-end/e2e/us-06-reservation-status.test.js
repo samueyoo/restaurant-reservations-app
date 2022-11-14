@@ -110,28 +110,71 @@ describe("US-06 - Reservation status - E2E", () => {
       });
 
       const finishButtonSelector = `[data-table-id-finish="${table.table_id}"]`;
+      console.log("//===============================================//")
+      console.log("... TESTING current selecting for data-table-id-finish element...")
+      console.log("//===============================================//")
       await page.waitForSelector(finishButtonSelector);
+
+      await page.screenshot({
+        path: ".screenshots/us-06-finish-before_2_waitForSelectorComplete.png",
+        fullPage: true,
+      });
+
+      console.log("//===============================================//")
+      console.log("... TESTING2 awaiting to accept dialog...")
+      console.log("//===============================================//")
 
       page.on("dialog", async (dialog) => {
         await dialog.accept();
       });
 
+      await page.screenshot({
+        path: ".screenshots/us-06-finish-before_3_dialogAccepted.png",
+        fullPage: true,
+      });
+
+      console.log("//===============================================//")
+      console.log("... TESTING3 dialog accepted! awaiting clicking finishButton...")
+      console.log("//===============================================//")
+
       await page.click(finishButtonSelector);
 
+      await page.screenshot({
+        path: ".screenshots/us-06-finish-before_4_finishButtonClicked.png",
+        fullPage: true,
+      });
+
+      console.log("//===============================================//")
+      console.log("... TESTING4 clicked! awaiting response from page, fetching tables?..")
+      console.log("//===============================================//")
+
+      //Getting stuck here
       await page.waitForResponse((response) => {
+        console.log("TEST0; INSIDE THE FUNCTION")
+        const returnValue = response.url().endsWith(`/tables`)
+        console.log("TEST; returnValue:", returnValue)
         return response.url().endsWith(`/tables`);
       });
+
+      console.log("//===============================================//")
+      console.log("... TESTING5 page response received! awaiting screenshot...")
+      console.log("//===============================================//")
 
       await page.screenshot({
         path: ".screenshots/us-06-finish-after.png",
         fullPage: true,
       });
 
+      console.log("//===============================================//")
+      console.log("... TESTING6 screenshot complete! checking page for data-reservation-id-status to be null...")
+      console.log("//===============================================//")
+
       expect(
         await page.$(
           `[data-reservation-id-status="${reservation.reservation_id}"]`
         )
       ).toBeNull();
+      console.log("COMPLETE!!!!")
     });
   });
 });

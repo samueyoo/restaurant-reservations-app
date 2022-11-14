@@ -25,6 +25,16 @@ function ReservationSeat() {
         return <TableOptions key={table.table_id} table={table} />
     })
 
+    async function handleSeat() {
+        await axios.put(`${API_BASE_URL}/reservations/${reservation_id}/status`, {
+            data: {
+                status: "seated"
+            }
+        })
+            .then(res => console.log("handleSeat res:", res.data))
+            .catch(error => console.error(error));
+    }
+
     async function handleSubmit(e) {
         e.preventDefault();
         // console.log("tables", tables, tables.length)
@@ -50,10 +60,7 @@ function ReservationSeat() {
         }
         //Update the table to the existing reservation
         await axios.put(`${API_BASE_URL}/tables/${formData}/seat`, {
-            data: {
-                    reservation_id: reservation_id,
-                    table_id: formData,
-                }
+            data: { reservation_id: reservation_id }
         })
             .then(res => {
                 if (res.error) throw new Error(res.error);
@@ -63,7 +70,15 @@ function ReservationSeat() {
             .catch(error => {
                 console.error(error);
                 setErr(error);
-            })
+            });
+
+        // await axios.put(`${API_BASE_URL}/reservations/${reservation_id}/status`, {
+        //     data: {
+        //         status: "seated"
+        //     }
+        // })
+        //     .then(res => console.log("handleSubmit res:", res.data))
+        //     .catch(error => console.error(error));
     }
 
     function handleChange({ target }) {
@@ -81,9 +96,10 @@ function ReservationSeat() {
                     <select 
                         name="table_id"
                         onChange={handleChange}
+                        defaultValue="none"
                         required
                     >
-                        <option value="none" selected disabled hidden>Select a Table</option>
+                        <option value="none" disabled hidden>Select a Table</option>
                         {mappedOptions}
                     </select>
                 </label>
