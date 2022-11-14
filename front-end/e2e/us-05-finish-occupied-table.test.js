@@ -68,10 +68,20 @@ describe("US-05 - Finish an occupied table - E2E", () => {
         "occupied"
       );
 
+      console.log("CHECKING IF data-table-id-status... CONTAINS OCCUPIED")
+
       expect(containsOccupied).toBe(true);
+
+      console.log("//===============================================//")
+      console.log("... OCCUPIED TEXT EVALUATED...")
+      console.log("//===============================================//")
 
       const finishButtonSelector = `[data-table-id-finish="${table.table_id}"]`;
       await page.waitForSelector(finishButtonSelector);
+
+      console.log("//===============================================//")
+      console.log("... WAITFORSELECTOR COMPLETE...")
+      console.log("//===============================================//")
 
       page.on("dialog", async (dialog) => {
         expect(dialog.message()).toContain(
@@ -82,9 +92,17 @@ describe("US-05 - Finish an occupied table - E2E", () => {
 
       await page.click(finishButtonSelector);
 
+      console.log("//===============================================//")
+      console.log("... SELECTOR CLICKED...")
+      console.log("//===============================================//")
+
       await page.waitForResponse((response) => {
         return response.url().endsWith(`/tables`);
       });
+
+      console.log("//===============================================//")
+      console.log("... AWAIT RESPONSE COMPLETE, ENDS WITH TABLE EVALUATED...")
+      console.log("//===============================================//")
 
       await page.screenshot({
         path: ".screenshots/us-05-dashboard-finish-button-after.png",

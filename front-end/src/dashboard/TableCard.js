@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-function TableCard({ table, setTables, setError, reservations, setReservations }) {
+function TableCard({ table, setTables, setError, reservations, setReservations, loadDash }) {
     const [open, setOpen] = useState(false);
     const API_BASE_URL =
     process.env.REACT_APP_API_BASE_URL || "http://localhost:5001";
@@ -13,9 +13,8 @@ function TableCard({ table, setTables, setError, reservations, setReservations }
         if (!open && table.reservation_id) setOpen(true);
     }
 
-    let breakSignal = 0;
-    async function handleConfirm() {
-        const reservationId = table.reservation_id;
+    async function handleConfirm(e) {
+        e.preventDefault();
         //Below delete request runs the unassign service, updating the table's FK to null
             //Returns a list of all reservations to setTables with
         await axios.delete(`${API_BASE_URL}/tables/${table.table_id}/seat`)
@@ -25,17 +24,16 @@ function TableCard({ table, setTables, setError, reservations, setReservations }
             })
             .then(data => setTables(data))
             .catch(error => {
-                breakSignal = 1;
-                console.log("TableCard, handleConfirm; breakSignal:", breakSignal)
                 setError(error);
             });
+        loadDash();
     }
 
     return (
         <div className="card">
             <div className="card-body">
                 <h5 className="card-title">{table.table_name} {table.table_id}</h5>
-                <p data-table-id-status={table.table_id} className="card-test">{table.reservation_id ? "Occupied" : "Free"}</p>
+                <p data-table-id-status={table.table_id} className="card-test">{table.reservation_id ? "occupied" : "Free"}</p>
             </div>
             {table.reservation_id ? <button data-table-id-finish={table.table_id} className="btn btn-primary" onClick={handleFinish}>Finish</button> : null}
             {open ? <div>

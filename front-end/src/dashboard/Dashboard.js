@@ -57,7 +57,7 @@ function Dashboard() {
     
     await axios.get(`${API_BASE_URL}/tables`)
         .then(res => setTables(res.data.data))
-
+        .catch(error => setReservationsError(error));
 
     return () => abortController.abort();
   }
@@ -114,7 +114,7 @@ function Dashboard() {
           <Container>
             <Row>
               <Col><ReservationsDisplay reservations={reservations} setReservations={setReservations} /></Col>
-              <Col><TablesDisplay tables={tables} setTables={setTables} setError={setReservationsError} reservations={reservations} setReservations={setReservations} /></Col>
+              <Col><TablesDisplay tables={tables} setTables={setTables} setError={setReservationsError} reservations={reservations} setReservations={setReservations} loadDash={loadDashboard} /></Col>
               
             </Row>
           </Container>
