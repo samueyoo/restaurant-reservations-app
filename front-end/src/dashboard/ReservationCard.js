@@ -1,7 +1,7 @@
 import React from "react";
 import capitalizeFirstLetter from "../utils/capitalizeFirstLetter";
 
-function ReservationCard({ reservation, setReservations }) {
+function ReservationCard({ reservation }) {
     const { first_name, last_name, mobile_number, reservation_date, reservation_time, people, reservation_id, status } = reservation;
     const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:5001";
 

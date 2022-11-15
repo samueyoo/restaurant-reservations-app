@@ -150,9 +150,9 @@ describe("US-06 - Reservation status - E2E", () => {
 
       //Getting stuck here
       await page.waitForResponse((response) => {
-        console.log("TEST0; INSIDE THE FUNCTION")
-        const returnValue = response.url().endsWith(`/tables`)
-        console.log("TEST; returnValue:", returnValue)
+        //console.log("TEST0; INSIDE THE FUNCTION")
+        //const returnValue = response.url().endsWith(`/tables`)
+        //console.log("TEST; returnValue:", returnValue)
         return response.url().endsWith(`/tables`);
       });
 
