@@ -52,7 +52,7 @@ function EditReservation() {
                 first_name: formData.first_name,
                 last_name: formData.last_name,
                 mobile_number: formData.mobile_number,
-                reservation_date: formData.reservation_date,
+                reservation_date: formData.reservation_date.substring(0, 10),
                 reservation_time: formData.reservation_time,
                 people: formData.people,
             }

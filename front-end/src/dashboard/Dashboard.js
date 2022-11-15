@@ -17,17 +17,19 @@ const axios = require("axios").default; //Added "default" d/t changed module exp
  * @returns {JSX.Element}
  */
 function Dashboard() {
+  const dateQuery = new URLSearchParams(useLocation().search).get("date");
+  console.log("dateQuery", dateQuery)
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
   const [tables, setTables] = useState([]);
-  const todaysDate = today()
+  const todaysDate = dateQuery ? dateQuery : today();
   const [date, setDate] = useState(todaysDate);
   //useParams hook; check back in notes and replace usage of date state
   const history = useHistory();
   useEffect(loadDashboard, [date]);
 
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:5001";
-  const dateQuery = new URLSearchParams(useLocation().search).get("date");
+
 
   //Troubleshooting function
   function getDateQuery() {
@@ -46,7 +48,7 @@ function Dashboard() {
         console.log("listReservations running...:", res.data.data); //DEBUG
         console.log(typeof res.data.data)
         return res.data.data;
-      })
+      }, abortController.signal)
       .then(res => {
         setReservations(res)
       })
@@ -55,7 +57,9 @@ function Dashboard() {
         setReservationsError(err)
       });
     
-    await axios.get(`${API_BASE_URL}/tables`)
+    await axios.get(`${API_BASE_URL}/tables`, {
+      signal: abortController.signal
+    })
         .then(res => setTables(res.data.data))
         .catch(error => setReservationsError(error));
 
