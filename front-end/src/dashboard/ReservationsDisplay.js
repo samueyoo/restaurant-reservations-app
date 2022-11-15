@@ -1,13 +1,10 @@
 import React from "react";
 import ReservationCard from "./ReservationCard";
 
-function ReservationsDisplay({ reservations = [], setReservations }) {
+function ReservationsDisplay({ reservations = [] }) {
     const formattedReservations = reservations.map(reservation => {
-        if (reservation.status === "finished") {
-            return null;
-        }
         return (
-            <ReservationCard key={reservation.reservation_id} reservation={reservation} setReservations={setReservations} />
+            <ReservationCard key={reservation.reservation_id} reservation={reservation} />
         )
     })
     return (

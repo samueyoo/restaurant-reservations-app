@@ -113,7 +113,7 @@ function Dashboard() {
 
           <Container>
             <Row>
-              <Col><ReservationsDisplay reservations={reservations} setReservations={setReservations} /></Col>
+              <Col><ReservationsDisplay reservations={reservations} /></Col>
               <Col><TablesDisplay tables={tables} setTables={setTables} setError={setReservationsError} reservations={reservations} setReservations={setReservations} loadDash={loadDashboard} /></Col>
               
             </Row>

@@ -7,8 +7,12 @@ const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 
 async function list(req, res) {
   if (req.query.date) {
-    console.log("Query data detected:", req.query.date);
+    console.log("Query data detected (date):", req.query.date);
     return res.json({ data: await service.listByDate(req.query.date) });
+  }
+  if (req.query.mobile_number) {
+    console.log("Query data detected (mobile_number):", req.query.mobile_number);
+    return res.json({ data: await service.listByNumber(req.query.mobile_number) });
   }
   console.log("No query data detected, proceeding with full list");
   return res.json({ data: await service.list()});
