@@ -42,9 +42,15 @@ function listByNumber(mobile_number) {
 
 function read(reservationId) {
     return knex("reservations")
-        .select("people",
+        .select("first_name",
+            "last_name",
+            "mobile_number",
+            "reservation_date",
+            "reservation_time",
+            "people",
             "reservation_id",
-            "status")
+            "status"
+        )
         .where({ reservation_id: reservationId })
         .first();
 }
@@ -78,6 +84,27 @@ function updateStatus(newStatus, reservationId) {
         });
 }
 
+function update(newData) {
+    return knex("reservations")
+        .select("*")
+        .where({ reservation_id: newData.reservation_id })
+        .update({ 
+            first_name: newData.first_name,
+            last_name: newData.last_name,
+            mobile_number: newData.mobile_number,
+            reservation_date: newData.reservation_date,
+            reservation_time: newData.reservation_time,
+            people: newData.people,
+        }, "*")
+        .then(updatedRecord => {
+            return updatedRecord[0];
+        })
+        .catch(error => {
+            console.error("Error has occurred", error);
+            return error;
+        });
+}
+
 module.exports = {
     list,
     listByDate,
@@ -85,4 +112,5 @@ module.exports = {
     read,
     create,
     updateStatus,
+    update,
 }

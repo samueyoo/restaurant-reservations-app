@@ -29,12 +29,12 @@ function Dashboard() {
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:5001";
   const dateQuery = new URLSearchParams(useLocation().search).get("date");
 
+  //Troubleshooting function
   function getDateQuery() {
     // Use get method to retrieve queryParam
     console.log("Dashboard; dateQuery:", dateQuery)
     return dateQuery;
   }
-
 
   async function loadDashboard() {
     const abortController = new AbortController();
@@ -87,13 +87,6 @@ function Dashboard() {
     }
   }
 
-  // const testAxios = async (e) => {
-  //   console.log("testAxios button pressed!");
-  //   console.log(`GET request to: ${API_BASE_URL}/reservations?date=${date}`)
-  //   axios.get(`${API_BASE_URL}/reservations?date=${date}`)
-  //     .then(res => console.log(res))
-  // }
-
   return (
     <main>
       <Switch>
@@ -113,12 +106,11 @@ function Dashboard() {
 
           <Container>
             <Row>
-              <Col><ReservationsDisplay reservations={reservations} /></Col>
+              <Col><ReservationsDisplay reservations={reservations} loadDash={loadDashboard} /></Col>
               <Col><TablesDisplay tables={tables} setTables={setTables} setError={setReservationsError} reservations={reservations} setReservations={setReservations} loadDash={loadDashboard} /></Col>
               
             </Row>
           </Container>
-
         </Route>
         <Route exact={true} path="/reservations/new">
           <New />
