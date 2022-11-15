@@ -1,10 +1,10 @@
 import React from "react";
 import ReservationCard from "./ReservationCard";
 
-function ReservationsDisplay({ reservations = [] }) {
+function ReservationsDisplay({ reservations = [], loadDash }) {
     const formattedReservations = reservations.map(reservation => {
         return (
-            <ReservationCard key={reservation.reservation_id} reservation={reservation} />
+            <ReservationCard key={reservation.reservation_id} reservation={reservation} loadDash={loadDash} />
         )
     })
     return (

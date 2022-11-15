@@ -16,6 +16,7 @@ router
 router
     .route("/:reservationId")
     .get(controller.read)
+    .put(controller.update)
     .all(notFound);
 
 router

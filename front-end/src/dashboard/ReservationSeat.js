@@ -71,14 +71,6 @@ function ReservationSeat() {
                 console.error(error);
                 setErr(error);
             });
-
-        // await axios.put(`${API_BASE_URL}/reservations/${reservation_id}/status`, {
-        //     data: {
-        //         status: "seated"
-        //     }
-        // })
-        //     .then(res => console.log("handleSubmit res:", res.data))
-        //     .catch(error => console.error(error));
     }
 
     function handleChange({ target }) {

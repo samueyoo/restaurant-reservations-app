@@ -6,7 +6,7 @@ import Row from "react-bootstrap/esm/Row";
 import ReservationsDisplay from "../dashboard/ReservationsDisplay";
 
 function Search() {
-    const [formData, setFormData] = useState();
+    const [formData, setFormData] = useState((""));
     const [reservations, setReservations] = useState();
     const [noResults, setNoResults] = useState(false);
     const [reservationsError, setReservationsError] = useState(null);

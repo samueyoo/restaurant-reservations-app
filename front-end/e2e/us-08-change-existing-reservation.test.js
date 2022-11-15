@@ -196,6 +196,14 @@ describe("US-08 - Change an existing reservation - E2E", () => {
         page.waitForNavigation({ waitUntil: "networkidle0" }),
       ]);
 
+      console.log("//=========================================================//")
+      console.log("... SUBMIT BUTTON CLICKED AND PAGE HAS WAITED FOR NETWORKIDLE0")
+      console.log("//=========================================================//")
+      await page.screenshot({
+        path: ".screenshots/us-08-edit-reservation-submit-before-CLICKED.png",
+        fullPage: true,
+      });
+
       expect(page.url()).toContain("/dashboard");
 
       await page.screenshot({

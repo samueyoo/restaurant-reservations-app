@@ -122,6 +122,12 @@ async function validatePutStatus(req, res, next) {
   next();
 }
 
+async function update(req, res) {
+  const data = req.body.data;
+  console.log("reservations.controller; data:", data)
+  return res.status(200).json({ data: await service.update(data) });
+}
+
 module.exports = {
   list,
   read: [
@@ -146,5 +152,18 @@ module.exports = {
     validateIdExists,
     validatePutStatus,
     updateStatus,
+  ],
+  update: [
+    validateProperty("first_name"),
+    validateProperty("last_name"),
+    validateProperty("mobile_number"),
+    validateProperty("reservation_date"),
+    validateProperty("reservation_time"),
+    validateProperty("people"),
+    validateIdExists,
+    validateDate,
+    validateTime,
+    validatePeople,
+    update
   ]
 };
