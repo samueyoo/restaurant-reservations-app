@@ -56,12 +56,10 @@ function read(reservationId) {
 }
 
 function create(newReservation) {
-    console.log(newReservation);
     return knex("reservations")
         .insert(newReservation)
         .returning("*")
         .then(createdRecord => {
-            //console.log("Knex returned createdRecord:", createdRecord);
             return createdRecord[0];
         })
         .catch(error => {

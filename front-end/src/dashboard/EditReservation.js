@@ -26,7 +26,8 @@ function EditReservation() {
     useEffect(loadDash, []);
 
     async function loadDash() {
-        axios.get(`${API_BASE_URL}/reservations/${reservationId}`)
+        const abortController = new AbortController();
+        axios.get(`${API_BASE_URL}/reservations/${reservationId}`, { signal: abortController.signal })
             .then(res => {
                 console.log("EditReservation; loadDash; res.data.data:", res.data.data);
                 setReservation(res.data.data);
@@ -34,6 +35,10 @@ function EditReservation() {
             })
             .then(data => setFormData(data))
             .catch(err => setErr(err));
+        return () => {
+            console.log("EditReservation; loadDash(); aborted!")
+            return abortController.abort();
+        }
     }
     
     function handleChange({ target }) {
@@ -46,6 +51,7 @@ function EditReservation() {
 
     async function handleSubmit(e) {
         e.preventDefault();
+        const abortController = new AbortController()
         axios.put(`${API_BASE_URL}/reservations/${reservationId}`, {
             data: {
                 reservation_id: reservationId,
