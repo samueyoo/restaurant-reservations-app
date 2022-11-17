@@ -7,14 +7,14 @@ const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 
 async function list(req, res) {
   if (req.query.date) {
-    console.log("Query data detected (date):", req.query.date);
+    //console.log("Query data detected (date):", req.query.date);
     return res.json({ data: await service.listByDate(req.query.date) });
   }
   if (req.query.mobile_number) {
-    console.log("Query data detected (mobile_number):", req.query.mobile_number);
+    //console.log("Query data detected (mobile_number):", req.query.mobile_number);
     return res.json({ data: await service.listByNumber(req.query.mobile_number) });
   }
-  console.log("No query data detected, proceeding with full list");
+  //console.log("No query data detected, proceeding with full list");
   return res.json({ data: await service.list()});
 }
 
@@ -30,7 +30,7 @@ async function validateIdExists(req, res, next) {
 }
 
 async function create(req, res) {
-  console.log("req.body", req.body)
+  //console.log("req.body", req.body)
   const response = await service.create(req.body.data);
   return res.status(201).json({ data: response });
 }
@@ -64,11 +64,11 @@ function validateDate(req, res, next) {
 function validateTime(req, res, next) {
   const time = req.body.data.reservation_time;
   if (time < "10:30") {
-    console.log("validateTime; reservation_time cannot be before 10:30 AM");
+    //console.log("validateTime; reservation_time cannot be before 10:30 AM");
     return next({ status: 400, message: `reservation_time cannot be before 10:30 AM`});
   }
   if (time > "21:30") {
-    console.log("validateTime; reservation_time cannot be after 9:30 PM");
+    //console.log("validateTime; reservation_time cannot be after 9:30 PM");
     return next({ status: 400, message: `reservation_time cannot be after 9:30 PM`});
   }
   const timeArray = time.split(":");
@@ -85,7 +85,7 @@ function validateTime(req, res, next) {
 function validateClosedFuture(req, res, next) {
   const day = new Date(req.body.data.reservation_date.replace(/-/g, '\/'));
   const today = new Date();
-  console.log("Backend; day = ", day)
+  //console.log("Backend; day = ", day)
   if (day.getTime() < today.getTime()) {
     return next({ status: 400, message: "Reservations must be in the future" })
   }
@@ -106,7 +106,7 @@ async function validatePostStatus(req, res, next) {
 async function updateStatus(req, res) {
   const { status } = req.body.data;
   const response = await service.updateStatus(status, req.params.reservationId);
-  console.log("reservations.controller.update; response:", response)
+  //console.log("reservations.controller.update; response:", response)
   return res.status(200).json({ data: response});
 }
 
@@ -115,7 +115,7 @@ async function validatePutStatus(req, res, next) {
   if (status === "unknown") {
     return next({ status: 400, message: `status should not be unknown; received: ${status}`});
   }
-  console.log("validatePutStatus; res.locals.data:", res.locals.data)
+  //console.log("validatePutStatus; res.locals.data:", res.locals.data)
   if (res.locals.data.status === "finished") {
     return next({ status: 400, message: `status is already finished; current status: ${status}`});
   }
@@ -124,7 +124,7 @@ async function validatePutStatus(req, res, next) {
 
 async function update(req, res) {
   const data = req.body.data;
-  console.log("reservations.controller; data:", data)
+  //console.log("reservations.controller; data:", data)
   return res.status(200).json({ data: await service.update(data) });
 }
 

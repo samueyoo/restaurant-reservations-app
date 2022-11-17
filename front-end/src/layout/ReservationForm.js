@@ -1,14 +1,11 @@
 import React from "react";
 
 function ReservationForm({ handleSubmit, handleCancel, handleChange, reservation }) {
-    const { first_name, last_name, mobile_number, reservation_date, reservation_time, people, reservation_id, status } = reservation;
-    console.log("ReservationForm; first_name:", first_name)
+    const { first_name, last_name, mobile_number, reservation_date, reservation_time, people } = reservation;
 
     let dateFormatted;
     if (reservation_date) {
-        console.log("reservation_date truthy, sorting", reservation_date)
         dateFormatted = reservation_date.substring(0, 10)
-        console.log("dateFormatted:", dateFormatted)
     }
 
     return(

@@ -9,13 +9,11 @@ export default async function validateCapacity(baseURL, reservationId, capacity)
             // console.log("Reservation # of people:", res.data.data.people)
             // console.log("Table capacity:", capacity)
             if (Number(res.data.data.people) > Number(capacity)) {
-                console.log("validateCapacity encountered error")
                 throw new Error("Party size cannot exceed table capacity");
             }
             return res;
         })
         .catch(error => {
-            console.error(error);
             return error;
         })
 }

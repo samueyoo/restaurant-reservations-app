@@ -17,20 +17,20 @@ function ReservationCard({ reservation, loadDash }) {
     }
 
     return (
-        <div className="card">
+        <div className="card" style={{ margin: "5px" }}>
             <div className="card-body">
                 <h5 className="card-title">{first_name} {last_name}</h5>
                 <p className="card-test">Mobile Number: {mobile_number}</p>
                 <p className="card-test">Reservation Date: {reservation_date}</p>
                 <p className="card-test">Reservation Time: {reservation_time}</p>
                 <p className="card-test">Number of People: {people}</p>
-                {status === "booked" ? <a className="btn btn-primary" href={`/reservations/${reservation_id}/edit`}>Edit</a> : null}
+                {status === "booked" ? <a className="btn btn-primary" href={`/reservations/${reservation_id}/edit`} style={{ padding: "10px" }}>Edit</a> : null}
             </div>
             <div className="">
                 <h6 style={{textAlign: "center"}} data-reservation-id-status={reservation_id}>{capitalizeFirstLetter(status)}</h6>
             </div>
-            {status !== "cancelled" ? <button className="btn btn-danger" data-reservation-id-cancel={reservation_id} onClick={handleCancel}>Cancel</button> : null}
-            {status === "booked" ? <a type="button" className="btn btn-primary" href={`/reservations/${reservation_id}/seat`}>Seat</a> : null}
+            {status !== "cancelled" ? <button className="btn btn-danger" data-reservation-id-cancel={reservation_id} onClick={handleCancel} style={{ margin: "5px" }}>Cancel</button> : null}
+            {status === "booked" ? <a type="button" className="btn btn-primary" href={`/reservations/${reservation_id}/seat`} style={{ margin: "5px" }}>Seat</a> : null}
         </div>
     )
 }

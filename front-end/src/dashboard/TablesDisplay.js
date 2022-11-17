@@ -1,5 +1,6 @@
 import React from "react";
 import TableCard from "./TableCard";
+import styles from "../style/styleSheet.module.css";
 
 function TablesDisplay({ tables, setTables, setError, reservations, setReservations, loadDash }) {
     //console.log("TablesDisplay; tables:", tables)
@@ -13,8 +14,8 @@ function TablesDisplay({ tables, setTables, setError, reservations, setReservati
     }
 
     return (
-        <div>
-            <h3>Tables</h3>
+        <div className={styles.tablesDisplay}>
+            <h3 style={{padding: "5px"}}>Tables</h3>
             {tableCards}
         </div>
     )

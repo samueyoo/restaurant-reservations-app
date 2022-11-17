@@ -1,0 +1,21 @@
+.reservationsDisplay {
+    background-color: #A7ABDD;
+    color: #81717A;
+    padding: 40px;
+    font-family: Arial;
+    text-align: center;
+    border: 2px solid #A7ABDD;
+    border-radius: 15px;
+    margin-top: 10px;
+}
+
+.tablesDisplay {
+    background-color: #B4D4EE;
+    color: #81717A;
+    padding: 40px;
+    font-family: Arial;
+    text-align: center;
+    border: 2px solid #B4D4EE;
+    border-radius: 15px;
+    margin-top: 10px;
+}

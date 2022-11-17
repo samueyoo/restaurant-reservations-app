@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import axios from "axios";
 
 function TableCard({ table, setTables, setError, reservations, setReservations, loadDash }) {
@@ -25,7 +25,7 @@ function TableCard({ table, setTables, setError, reservations, setReservations, 
     }
 
     return (
-        <div className="card">
+        <div className="card" style={{ margin: "5px" }}>
             <div className="card-body">
                 <h5 className="card-title">{table.table_name} {table.table_id}</h5>
                 <p data-table-id-status={table.table_id} className="card-test">{table.reservation_id ? "occupied" : "Free"}</p>
