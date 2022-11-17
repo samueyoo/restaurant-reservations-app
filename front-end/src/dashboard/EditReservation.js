@@ -22,7 +22,6 @@ function EditReservation() {
     const [formData, setFormData] = useState({ ...reservation, reservation_id: reservationId });
     const [err, setErr] = useState(null);
     const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:5001";
-    //const { first_name, last_name, mobile_number, reservation_date, reservation_time, people, reservation_id, status } = reservation;
 
     useEffect(() => {
         const controller = new AbortController();
