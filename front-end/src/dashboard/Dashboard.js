@@ -78,13 +78,13 @@ function Dashboard() {
   }
 
   return (
-    <main style={{ backgroundColor: "#B4D4EE"}}>
+    <main className={styles.generalBackground}>
       <Switch>
         <Route exact={true} path="/dashboard">
           <Container>
             <Row>
               <Col>
-                <div style={{ textAlign: "center", backgroundColor: "#8da9c0", color: "#ffffff", borderRadius: "15px", marginTop: "15px", padding: "10px" }}>
+                <div className={styles.dashboardHeader}>
                   <h1>Yoo's Stews</h1>
                   <h4 className="mb-0">Reservations for {dateQuery ? dateQuery : date}</h4>
                   <button id="prev" type="button" className={styles.buttonsDash} onClick={handleDateChange}>Previous</button>

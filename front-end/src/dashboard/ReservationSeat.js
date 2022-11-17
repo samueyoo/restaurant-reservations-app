@@ -4,6 +4,7 @@ import { useParams, useHistory } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
 import validateCapacity from "../utils/validateCapacity";
 import TableOptions from "./TableOptions";
+import styles from "../style/styleSheet.module.css";
 
 function ReservationSeat() {
     const [tables, setTables] = useState([]);
@@ -79,8 +80,10 @@ function ReservationSeat() {
     return (
         <div>
             { err && <ErrorAlert error={err} />}
-
-            <form onSubmit={handleSubmit}>
+            <h1 className={styles.dashboardHeader}>
+                Assign Reservation a Table
+            </h1>
+            <form onSubmit={handleSubmit} className={styles.dashboardHeader}>
                 <label>
                     Table number:
                     <select 
@@ -88,6 +91,7 @@ function ReservationSeat() {
                         onChange={handleChange}
                         defaultValue="none"
                         required
+                        className={styles.input}
                     >
                         <option value="none" disabled hidden>Select a Table</option>
                         {mappedOptions}

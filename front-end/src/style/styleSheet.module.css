@@ -30,3 +30,20 @@
     padding-left: 15px;
     padding-right: 15px;
 }
+
+.dashboardHeader {
+    text-align: center;
+    background-color: #8da9c0;
+    color: #ffffff;
+    border-radius: 15px;
+    margin-top: 15px;
+    padding: 10px
+}
+
+.generalBackground {
+    background-color: #B4D4EE;
+}
+
+.input {
+    margin-left: 5px;
+}

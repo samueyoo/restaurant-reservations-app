@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router";
 import ErrorAlert from "../layout/ErrorAlert";
 import ReservationForm from "../layout/ReservationForm";
+import styles from "../style/styleSheet.module.css";
 
 function EditReservation() {
     const defaultReservation = {
@@ -84,7 +85,7 @@ function EditReservation() {
     
     return (
         <div>
-            <h1>Edit Reservation</h1>
+            <h1 className={styles.dashboardHeader}>Edit Reservation</h1>
             <ErrorAlert error={err} />
             <ReservationForm handleSubmit={handleSubmit} handleCancel={handleCancel} handleChange={handleChange} reservation={reservation} />
             <br />
