@@ -5,6 +5,7 @@ import Container from "react-bootstrap/esm/Container";
 import Row from "react-bootstrap/esm/Row";
 import ReservationsDisplay from "../dashboard/ReservationsDisplay";
 import ErrorAlert from "../layout/ErrorAlert";
+import styles from "../style/styleSheet.module.css";
 
 function Search() {
     const [formData, setFormData] = useState((""));
@@ -47,26 +48,26 @@ function Search() {
     }
 
     return (
-        <div>
+        <div className={styles.dashboardHeader}>
             <h1>
                 Search by Phone Number
             </h1>
             <ErrorAlert error={reservationsError} />
             <form onSubmit={handleSubmit}>
-                <label>
+                <label >
                     Phone Number:
                     <input 
                         name="mobile_number"
                         type="text"
                         id="mobile_number"
-                        placeholder="Enter a customer's phone number"
+                        placeholder="Enter customer's phone #"
                         onChange={handleChange}
                         required
+                        className={styles.input}
                     />
                 </label>
                 <br />
                 <button type="submit" className="btn btn-primary">Find</button>
-                <button type="button" className="btn btn-secondary" onClick={() => console.log(reservations)}>Test reservations state</button>
             </form>
             <Container>
                 <Row>

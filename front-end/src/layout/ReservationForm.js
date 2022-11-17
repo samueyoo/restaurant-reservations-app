@@ -1,4 +1,5 @@
 import React from "react";
+import styles from "../style/styleSheet.module.css";
 
 function ReservationForm({ handleSubmit, handleCancel, handleChange, reservation }) {
     const { first_name, last_name, mobile_number, reservation_date, reservation_time, people } = reservation;
@@ -9,7 +10,7 @@ function ReservationForm({ handleSubmit, handleCancel, handleChange, reservation
     }
 
     return(
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className={styles.dashboardHeader}>
             <label>
                 First Name: 
                 <input
@@ -20,6 +21,7 @@ function ReservationForm({ handleSubmit, handleCancel, handleChange, reservation
                     placeholder="First Name"
                     onChange={handleChange}
                     required
+                    className={styles.input}
                 />
             </label>
             <br />
@@ -33,6 +35,7 @@ function ReservationForm({ handleSubmit, handleCancel, handleChange, reservation
                     placeholder="Last Name"
                     onChange={handleChange}
                     required
+                    className={styles.input}
                 />
             </label>
             <br />
@@ -46,6 +49,7 @@ function ReservationForm({ handleSubmit, handleCancel, handleChange, reservation
                     placeholder="Mobile Number"
                     onChange={handleChange}
                     required
+                    className={styles.input}
                 />
             </label>
             <br />
@@ -60,6 +64,7 @@ function ReservationForm({ handleSubmit, handleCancel, handleChange, reservation
                     pattern="\d{4}-\d{2}-\d{2}"
                     onChange={handleChange}
                     required
+                    className={styles.input}
                 />
             </label>
             <br />
@@ -74,6 +79,7 @@ function ReservationForm({ handleSubmit, handleCancel, handleChange, reservation
                     pattern="[0-9]{2}:[0-9]{2}"
                     onChange={handleChange}
                     required
+                    className={styles.input}
                 />
             </label>
             <br />
@@ -87,11 +93,12 @@ function ReservationForm({ handleSubmit, handleCancel, handleChange, reservation
                     placeholder="Number of People in the Party"
                     onChange={handleChange}
                     required
+                    className={styles.input}
                 />
             </label>
             <br />
-            <button type="button" className="btn btn-secondary" style={{"marginRight": 5}} onClick={handleCancel} data-reservation-id-cancel={reservation.reservation_id} >Cancel</button>
-            <button type="submit" className="btn btn-primary">Submit</button>
+            <button type="button" className="btn btn-secondary" style={{ marginRight: 5, marginBottom: "10px"}} onClick={handleCancel} data-reservation-id-cancel={reservation.reservation_id} >Cancel</button>
+            <button type="submit" className="btn btn-primary" style={{ marginBottom: "10px"}}>Submit</button>
         </form>
     )
 }

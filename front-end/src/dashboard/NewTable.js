@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import ErrorAlert from "../layout/ErrorAlert";
+import styles from "../style/styleSheet.module.css";
 
 function NewTable() {
     const [formData, setFormData] = useState();
@@ -40,11 +41,11 @@ function NewTable() {
         <div>
             { err && <ErrorAlert error={err} />}
 
-            <h1>
+            <h1 className={styles.dashboardHeader}>
                 Create a New Table
             </h1>
 
-            <form onSubmit={handleNewTable}>
+            <form onSubmit={handleNewTable} className={styles.dashboardHeader}>
                 <label>
                     Table Name: 
                     <input
@@ -55,6 +56,7 @@ function NewTable() {
                         minLength={2}
                         onChange={handleChange}
                         required
+                        className={styles.input}
                     />
                 </label>
                 <br />
@@ -68,6 +70,7 @@ function NewTable() {
                         min={1}
                         onChange={handleChange}
                         required
+                        className={styles.input}
                     />
                 </label>
                 <br />

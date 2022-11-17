@@ -5,6 +5,7 @@ import ReservationForm from "../layout/ReservationForm";
 import validateDateIsBefore from "../utils/validateDate";
 import validateTime from "../utils/validateTime";
 import axios from "axios";
+import styles from "../style/styleSheet.module.css";
 
 function New() {
     const history = useHistory();
@@ -66,7 +67,7 @@ function New() {
         <div>
             { err && <ErrorAlert error={err} />}
         
-            <h1>
+            <h1 className={styles.dashboardHeader}>
                 Create a New Reservation
             </h1>
 
