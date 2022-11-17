@@ -30,7 +30,7 @@ function ReservationSeat() {
             setTables(response.data.data)
         } catch (error) {
             console.log("ReservationSeat; loadTables; an error occurred!", error)
-            if (error.name !== "CanceledError") setErr(err);
+            if (error.name !== "CanceledError") setErr(error);
         }
     }
 
@@ -63,7 +63,7 @@ function ReservationSeat() {
         }
         //Update the table to the existing reservation
         try {
-            const response = await axios.put(`${API_BASE_URL}/tables/${formData}/seat`, {
+            await axios.put(`${API_BASE_URL}/tables/${formData}/seat`, {
                 data: { reservation_id: reservation_id }
             }, { signal: controller.signal });
             history.push("/dashboard");
