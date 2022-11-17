@@ -4,6 +4,7 @@ import Col from "react-bootstrap/esm/Col";
 import Container from "react-bootstrap/esm/Container";
 import Row from "react-bootstrap/esm/Row";
 import ReservationsDisplay from "../dashboard/ReservationsDisplay";
+import ErrorAlert from "../layout/ErrorAlert";
 
 function Search() {
     const [formData, setFormData] = useState((""));
@@ -20,7 +21,6 @@ function Search() {
     }
 
     function handleChange({ target }) {
-        console.log(target.name, target.value)
         setFormData({
             ...formData,
             [target.name]: target.value
@@ -33,13 +33,16 @@ function Search() {
         await setNoResults(false);
         await axios.get(`${API_BASE_URL}/reservations?mobile_number=${formData.mobile_number}`)
             .then(res => {
-                console.log("Search; handleSubmit; res.data.data:", res.data.data)
+                //console.log("Search; handleSubmit; res.data.data:", res.data.data)
                 if (res.data.data.length > 0) {
                     setReservations(res.data.data)
                 } else {
                     setNoResults(true);
                     setReservations();
                 }
+            })
+            .catch(error => {
+                setReservationsError(error);
             })
     }
 
@@ -48,6 +51,7 @@ function Search() {
             <h1>
                 Search by Phone Number
             </h1>
+            <ErrorAlert error={reservationsError} />
             <form onSubmit={handleSubmit}>
                 <label>
                     Phone Number:

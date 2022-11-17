@@ -29,14 +29,14 @@ function EditReservation() {
         const abortController = new AbortController();
         axios.get(`${API_BASE_URL}/reservations/${reservationId}`, { signal: abortController.signal })
             .then(res => {
-                console.log("EditReservation; loadDash; res.data.data:", res.data.data);
+                //console.log("EditReservation; loadDash; res.data.data:", res.data.data);
                 setReservation(res.data.data);
                 return res.data.data;
             })
             .then(data => setFormData(data))
             .catch(err => setErr(err));
         return () => {
-            console.log("EditReservation; loadDash(); aborted!")
+            //console.log("EditReservation; loadDash(); aborted!")
             return abortController.abort();
         }
     }
@@ -46,7 +46,6 @@ function EditReservation() {
             ...formData,
             [target.name]: target.value,
         })
-        console.log(formData)
     }
 
     async function handleSubmit(e) {
@@ -62,10 +61,7 @@ function EditReservation() {
                 reservation_time: formData.reservation_time,
                 people: formData.people,
             }
-        })
-            .then((res) => {
-                console.log("EditReservation; handleSubmit; res:", res)
-            })
+        }, { signal: abortController.signal })
             .then(() => history.push(`/dashboard?date=${formData.reservation_date.substring(0, 10)}`))
             .catch(err => setErr(err));
     }
@@ -77,8 +73,6 @@ function EditReservation() {
     return (
         <div>
             <h1>Edit Reservation</h1>
-            <button onClick={() => console.log(reservation)} >Test reservation</button>
-            <button onClick={() => console.log(formData)} >Test formData</button>
             <ErrorAlert error={err} />
             <ReservationForm handleSubmit={handleSubmit} handleCancel={handleCancel} handleChange={handleChange} reservation={reservation} />
             <br />

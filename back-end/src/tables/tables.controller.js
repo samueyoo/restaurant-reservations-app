@@ -8,7 +8,7 @@ async function list(req, res) {
 }
 
 async function create(req, res) {
-    console.log("req.body", req.body)
+    //console.log("req.body", req.body)
     const response = await service.create(req.body.data);
     return res.status(201).json({ data: response });
 }
@@ -30,8 +30,8 @@ function validateNameLength(req, res, next) {
 
 function validateCapacity(req, res, next) {
     const { data = {} } = req.body;
-    console.log("validateCapacity; req.body.data.capacity:", data.capacity)
-    console.log("typeof:", typeof data.capacity)
+    //console.log("validateCapacity; req.body.data.capacity:", data.capacity)
+    //console.log("typeof:", typeof data.capacity)
     if (typeof data.capacity !== "number") {
         return next({ status: 400, message: "Table capacity must be a number" });
     }

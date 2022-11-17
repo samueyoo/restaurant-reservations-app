@@ -14,7 +14,7 @@ function read(tableId) {
 }
 
 function create(newTable) {
-    console.log("creating new table...")
+    //console.log("creating new table...")
     return knex("tables")
         .insert(newTable)
         .returning("*")
