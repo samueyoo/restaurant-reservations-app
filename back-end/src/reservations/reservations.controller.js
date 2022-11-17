@@ -95,7 +95,7 @@ function validateClosedFuture(req, res, next) {
   next();
 }
 
-async function validatePostStatus(req, res, next) {
+function validatePostStatus(req, res, next) {
   const { status = "" } = req.body.data;
   if (status === "seated" || status === "finished") {
     return next({ status: 400, message: `status should be "booked" only; received: ${status}` });
@@ -110,7 +110,7 @@ async function updateStatus(req, res) {
   return res.status(200).json({ data: response});
 }
 
-async function validatePutStatus(req, res, next) {
+function validatePutStatus(req, res, next) {
   const { status = "" } = req.body.data;
   if (status === "unknown") {
     return next({ status: 400, message: `status should not be unknown; received: ${status}`});
@@ -129,10 +129,12 @@ async function update(req, res) {
 }
 
 module.exports = {
-  list,
+  list: [
+    asyncErrorBoundary(list),
+  ],
   read: [
-    validateIdExists,
-    read
+    asyncErrorBoundary(validateIdExists),
+    asyncErrorBoundary(read)
   ],
   create: [ //Validation of properties not needed since required on front-end side
     validateProperty("first_name"), 
@@ -151,7 +153,7 @@ module.exports = {
   updateStatus: [
     validateIdExists,
     validatePutStatus,
-    updateStatus,
+    asyncErrorBoundary(updateStatus),
   ],
   update: [
     validateProperty("first_name"),
@@ -164,6 +166,6 @@ module.exports = {
     validateDate,
     validateTime,
     validatePeople,
-    update
+    asyncErrorBoundary(update)
   ]
 };

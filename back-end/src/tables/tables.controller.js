@@ -1,14 +1,12 @@
 const service = require("./tables.service");
 const reservationService = require("../reservations/reservations.service")
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
-const { whereExists } = require("../db/connection");
 
 async function list(req, res) {
     return res.json({ data: await service.list() });
 }
 
 async function create(req, res) {
-    //console.log("req.body", req.body)
     const response = await service.create(req.body.data);
     return res.status(201).json({ data: response });
 }
@@ -30,8 +28,6 @@ function validateNameLength(req, res, next) {
 
 function validateCapacity(req, res, next) {
     const { data = {} } = req.body;
-    //console.log("validateCapacity; req.body.data.capacity:", data.capacity)
-    //console.log("typeof:", typeof data.capacity)
     if (typeof data.capacity !== "number") {
         return next({ status: 400, message: "Table capacity must be a number" });
     }
@@ -39,7 +35,6 @@ function validateCapacity(req, res, next) {
         return next({ status: 400, message: "Table capacity cannot be zero" });
     }
     next();
-
 }
 
 async function assign(req, res) {
@@ -84,7 +79,7 @@ async function validateCapactityForParty(req, res, next) {
     next();
 }
 
-async function unassign(req, res) { //THIS ONE
+async function unassign(req, res) {
     const tableId = req.params.table_id;
     await service.unassign(tableId)
     await reservationService.updateStatus("finished", res.locals.table.reservation_id)
@@ -109,24 +104,26 @@ async function validateTableOccupancy(req, res, next) {
 }
 
 module.exports = {
-    list,
+    list: [
+        asyncErrorBoundary(list),
+    ],
     create: [
         validateProperty("table_name"),
         validateProperty("capacity"),
         validateNameLength,
         validateCapacity,
-        create
+        asyncErrorBoundary(create)
     ],
     assign: [
         validateProperty("reservation_id"),
-        validateReservationExists,
-        validateAlreadySeated,
-        validateCapactityForParty,
-        assign
+        asyncErrorBoundary(validateReservationExists),
+        asyncErrorBoundary(validateAlreadySeated),
+        asyncErrorBoundary(validateCapactityForParty),
+        asyncErrorBoundary(assign),
     ],
     unassign: [
-        validateTableExists,
-        validateTableOccupancy,
-        unassign
+        asyncErrorBoundary(validateTableExists),
+        asyncErrorBoundary(validateTableOccupancy),
+        asyncErrorBoundary(unassign)
     ]
 }
