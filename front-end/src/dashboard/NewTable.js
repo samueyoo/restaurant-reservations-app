@@ -18,23 +18,22 @@ function NewTable() {
 
     async function handleNewTable(e) {
         e.preventDefault();
+        const controller = new AbortController();
         const { table_name, capacity } = formData;
-        await axios.post(`${API_BASE_URL}/tables`, {
-            data: {
-                table_name: table_name,
-                capacity: Number(capacity)
-            }
-        })
-            .then(res => {
-                if (res.error) throw new Error(res.error);
-                return res;
-            })
-            .then(() => history.push("/dashboard"))
-            .catch(error => {
-                console.error(error);
-                setErr(error);
-            })
-            history.push('/dashboard');
+        try {
+            await axios.post(`${API_BASE_URL}/tables`, {
+                data: {
+                    table_name: table_name,
+                    capacity: Number(capacity)
+                }
+            }, { signal: controller.signal })
+            history.push("/dashboard")
+        } catch (error) {
+            if (error.name !== "CanceledError") setErr(error);
+        }
+        return () => {
+            controller.abort();
+        }
     }
 
     return (

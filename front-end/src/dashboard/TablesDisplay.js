@@ -15,7 +15,7 @@ function TablesDisplay({ tables, setTables, setError, reservations, setReservati
 
     return (
         <div className={styles.tablesDisplay}>
-            <h3 style={{padding: "5px"}}>Tables</h3>
+            <h3 style={{padding: "5px", color: "#ffffff"}}>Tables</h3>
             {tableCards}
         </div>
     )

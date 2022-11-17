@@ -23,21 +23,26 @@ function EditReservation() {
     const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:5001";
     //const { first_name, last_name, mobile_number, reservation_date, reservation_time, people, reservation_id, status } = reservation;
 
-    useEffect(loadDash, []);
-
-    async function loadDash() {
-        const abortController = new AbortController();
-        axios.get(`${API_BASE_URL}/reservations/${reservationId}`, { signal: abortController.signal })
-            .then(res => {
-                //console.log("EditReservation; loadDash; res.data.data:", res.data.data);
-                setReservation(res.data.data);
-                return res.data.data;
-            })
-            .then(data => setFormData(data))
-            .catch(err => setErr(err));
+    useEffect(() => {
+        const controller = new AbortController();
+        loadDash(controller);
         return () => {
-            //console.log("EditReservation; loadDash(); aborted!")
-            return abortController.abort();
+            console.log("cleanup", reservationId);
+            controller.abort();
+        }
+    }, []);
+
+    async function loadDash(controller) {
+        try {
+            const response = await axios.get(`${API_BASE_URL}/reservations/${reservationId}`, { signal: controller.signal });
+            setReservation(response.data.data);
+            setFormData(response.data.data)
+        } catch (err) {
+            if (err.name === "CanceledError") {
+                console.log("Aborted", reservationId);
+            } else {
+                setErr(err)
+            }
         }
     }
     
@@ -50,20 +55,27 @@ function EditReservation() {
 
     async function handleSubmit(e) {
         e.preventDefault();
-        const abortController = new AbortController()
-        axios.put(`${API_BASE_URL}/reservations/${reservationId}`, {
-            data: {
-                reservation_id: reservationId,
-                first_name: formData.first_name,
-                last_name: formData.last_name,
-                mobile_number: formData.mobile_number,
-                reservation_date: formData.reservation_date.substring(0, 10),
-                reservation_time: formData.reservation_time,
-                people: formData.people,
-            }
-        }, { signal: abortController.signal })
-            .then(() => history.push(`/dashboard?date=${formData.reservation_date.substring(0, 10)}`))
-            .catch(err => setErr(err));
+        const controller = new AbortController()
+        try {
+            await axios.put(`${API_BASE_URL}/reservations/${reservationId}`, {
+                data: {
+                    reservation_id: reservationId,
+                    first_name: formData.first_name,
+                    last_name: formData.last_name,
+                    mobile_number: formData.mobile_number,
+                    reservation_date: formData.reservation_date.substring(0, 10),
+                    reservation_time: formData.reservation_time,
+                    people: formData.people,
+                }
+            }, { signal: controller.signal })
+            history.push(`/dashboard?date=${formData.reservation_date.substring(0, 10)}`);        
+        } catch (err) {
+            if (err.name !== "CanceledError") setErr(err);
+        }
+        return () => {
+            console.log("Edit PUT submit aborted")
+            controller.abort();
+        }
     }
 
     function handleCancel() {

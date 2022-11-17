@@ -8,6 +8,7 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import TablesDisplay from "./TablesDisplay";
+import styles from "../style/styleSheet.module.css";
 const axios = require("axios").default; //Added "default" d/t changed module export syntax with post 1.0 version per Axios's issues page
 
 /**
@@ -25,36 +26,34 @@ function Dashboard() {
   const [date, setDate] = useState(todaysDate);
   const history = useHistory();
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:5001";
+  const finalDate = dateQuery ? dateQuery : date;
 
   useEffect(() => {
-    const abortControllerPromise = loadDashboard()
-    return async () => {
-      const abortController = await abortControllerPromise;
-      console.log("aborted")
-      abortController.abort()
-    };
+    const controller = new AbortController();
+    loadDashboard(controller);
+    return () => {
+      console.log("cleanup", finalDate);
+      controller.abort();
+    }
   }, [date]);
 
-  async function loadDashboard() {
-    const abortController = new AbortController();
-    setReservationsError(null);
-    await axios.get(`${API_BASE_URL}/reservations?date=${dateQuery ? dateQuery : date}`, { signal: abortController.signal })
-      .then(res => {
-        return res.data.data;
-      })
-      .then(res => {
-        setReservations(res)
-      })
-      .catch(err => {
-        setReservationsError(err)
-      });
-    
-    await axios.get(`${API_BASE_URL}/tables`, { signal: abortController.signal })
-        .then(res => setTables(res.data.data))
-        .catch(error => setReservationsError(error));
-
-    console.log("loadDashboard(); loaded!")
-    return abortController;
+  async function loadDashboard(controller) {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/reservations?date=${dateQuery ? dateQuery : date}`, { signal: controller.signal })
+      setReservations(response.data.data)
+    } catch (error) {
+      if (error.name === "CanceledError") {
+        console.log("Aborted", finalDate);
+      } else {
+        setReservationsError(error);
+      }
+    }
+    try {
+      const response = await axios.get(`${API_BASE_URL}/tables`, { signal: controller.signal });
+      setTables(response.data.data)
+    } catch (error) {
+      if (error.name !== "CanceledError") setReservationsError(error);
+    }
   }
 
   const handleDateChange = (e) => {
@@ -79,21 +78,27 @@ function Dashboard() {
   }
 
   return (
-    <main>
+    <main style={{ backgroundColor: "#B4D4EE"}}>
       <Switch>
         <Route exact={true} path="/dashboard">
-          <h1>Yoo's Stews</h1>
-          <div className="d-md-flex mb-3">
-            <h4 className="mb-0">Reservations for {dateQuery ? dateQuery : date}</h4>
-          </div>
-          <button id="prev" type="button" className="btn btn-primary" onClick={handleDateChange}>Previous</button>
-          <button id="today" type="button" className="btn btn-primary" onClick={handleDateChange}>Today</button>
-          <button id="next" type="button" className="btn btn-primary" onClick={handleDateChange}>Next</button>
-          <ErrorAlert error={reservationsError} />
-
           <Container>
             <Row>
-              <Col><ReservationsDisplay reservations={reservations} loadDash={loadDashboard} /></Col>
+              <Col>
+                <div style={{ textAlign: "center", backgroundColor: "#8da9c0", color: "#ffffff", borderRadius: "15px", marginTop: "15px", padding: "10px" }}>
+                  <h1>Yoo's Stews</h1>
+                  <h4 className="mb-0">Reservations for {dateQuery ? dateQuery : date}</h4>
+                  <button id="prev" type="button" className={styles.buttonsDash} onClick={handleDateChange}>Previous</button>
+                  <button id="today" type="button" className={styles.buttonsDash} onClick={handleDateChange}>Today</button>
+                  <button id="next" type="button" className={styles.buttonsDash} onClick={handleDateChange}>Next</button>
+                  <ErrorAlert error={reservationsError} />
+                </div>
+              </Col>
+            </Row>
+
+          </Container>
+          <Container>
+            <Row>
+              <Col><ReservationsDisplay reservations={reservations} loadDash={loadDashboard} setError={setReservationsError} /></Col>
               <Col><TablesDisplay tables={tables} setTables={setTables} setError={setReservationsError} reservations={reservations} setReservations={setReservations} loadDash={loadDashboard} /></Col>
               
             </Row>

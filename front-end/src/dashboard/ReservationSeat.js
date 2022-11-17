@@ -11,34 +11,36 @@ function ReservationSeat() {
     const [formData, setFormData] = useState();
     const [err, setErr] = useState();
     const history = useHistory();
-    useEffect(loadTables, [])
 
-    const API_BASE_URL =
-    process.env.REACT_APP_API_BASE_URL || "http://localhost:5001";
+    useEffect(() => {
+        const controller = new AbortController();
+        loadTables(controller);
+        return () => {
+            controller.abort();
+        }
+    }, [])
 
-    async function loadTables() {
-        await axios.get(`${API_BASE_URL}/tables`)
-            .then(res => setTables(res.data.data))
+    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:5001";
+
+    //Fetches an array of all the current tables; saves in tables state
+    async function loadTables(controller) {
+        try {
+            const response = await axios.get(`${API_BASE_URL}/tables`, { signal: controller.signal });
+            setTables(response.data.data)
+        } catch (error) {
+            console.log("ReservationSeat; loadTables; an error occurred!", error)
+            if (error.name !== "CanceledError") setErr(err);
+        }
     }
 
+    //Create TableOptions components to display (which are just <option> tags to populate the drop-down menu)
     const mappedOptions = tables.map(table => {
         return <TableOptions key={table.table_id} table={table} />
     })
 
-    async function handleSeat() {
-        await axios.put(`${API_BASE_URL}/reservations/${reservation_id}/status`, {
-            data: {
-                status: "seated"
-            }
-        })
-            .then(res => console.log("handleSeat res:", res.data))
-            .catch(error => console.error(error));
-    }
-
     async function handleSubmit(e) {
         e.preventDefault();
-        // console.log("tables", tables, tables.length)
-        // if (tables.length === 0) return null;
+        const controller = new AbortController();
 
         //Pull table info from current list of tables saved under the tables state
         const tableCheck = tables.find(table => {
@@ -59,18 +61,14 @@ function ReservationSeat() {
             return null;
         }
         //Update the table to the existing reservation
-        await axios.put(`${API_BASE_URL}/tables/${formData}/seat`, {
-            data: { reservation_id: reservation_id }
-        })
-            .then(res => {
-                if (res.error) throw new Error(res.error);
-                return res;
-            })
-            .then(() => history.push("/dashboard"))
-            .catch(error => {
-                console.error(error);
-                setErr(error);
-            });
+        try {
+            const response = await axios.put(`${API_BASE_URL}/tables/${formData}/seat`, {
+                data: { reservation_id: reservation_id }
+            }, { signal: controller.signal });
+            history.push("/dashboard");
+        } catch (error) {
+            if (error.name !== "CanceledError") setErr(error);
+        }
     }
 
     function handleChange({ target }) {
