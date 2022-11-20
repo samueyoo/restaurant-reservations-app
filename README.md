@@ -1,4 +1,4 @@
-Restaurant Reservations
+**Restaurant Reservations**
 
 • Full-stack web application for creating, editing, and updating reservations at a restaurant
 
