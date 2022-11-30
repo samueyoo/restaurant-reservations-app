@@ -11,8 +11,6 @@
 • Deployed on cloud service (Heroku and Render)
 
 
-Technology: JavaScript, Express, React/React-Router, Bootstrap, PostgreSQL (ElephantSQL), Knex, HTML/CSS, GitHub for version control
-
-GitHub: https://github.com/samueyoo/restaurant-reservations-app
+Technology: JavaScript, Express, React/React-Router, Bootstrap, PostgreSQL (ElephantSQL), Knex, HTML/CSS
 
 Live Version on Heroku: https://rr-frontend-sy.herokuapp.com/ (will be re-hosted on Render after Heroku free services disable in November)
